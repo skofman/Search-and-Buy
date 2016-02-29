@@ -50,3 +50,30 @@ body {
   max-width: 100%;
   max-height: 200px;
 }
+
+.results-summary {
+  border: 1px solid black;
+  height: 50px;
+  margin-bottom: 30px;
+}
+
+#results-text {
+  font-size: 16px;
+  margin-top: 12px;
+  display: inline-block;
+}
+
+.results-sort {
+  float: right;
+  margin-top: 6px;
+}
+
+.results-view {
+  float: right;
+  margin-top: 6px;
+}
+
+.item-image {
+  max-height: 200px;
+  max-width: 100%;
+}
