@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Search and Buy</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+  <!-- Main bar -->
+  <div class="container-fluid main-bar">
+    <div class="row">
+      <div class="col-md-2 col-sm-3 col-xs-4">
+        <a href="#"><img id="logo" src="images/logo.png"></a>
+      </div>
+      <div class="col-md-8 col-sm-6 col-xs-4">
+        <div class="input-group search-bar">
+          <div class="input-group-btn">
+            <button type="button" class="btn btn-default dropdown-toggle" id="category" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value="All">All <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+              <li><a href="#" class="cat-selector">All</a></li>
+              <li><a href="#" class="cat-selector">Televisions</a></li>
+              <li><a href="#" class="cat-selector">Audio</a></li>
+              <li><a href="#" class="cat-selector">Phones</a></li>
+            </ul>
+          </div>
+          <input type="text" class="form-control" id="search-field" placeholder="Search">
+          <span class="input-group-btn">
+            <button id="search-btn" class="btn btn-default" type="button"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+          </span>
+        </div>
+      </div>
+      <div class="cart col-md-2 col-sm-3 col-xs-4">
+        <img id="cart-image" src="images/cart-img.png" height="45" width="45">
+        <span id="cart-title">Cart</span>
+        <span id="cart-items">0</span>
+      </div>
+    </div>
+  </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

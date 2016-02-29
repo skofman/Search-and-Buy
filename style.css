@@ -1,0 +1,47 @@
+body {
+  padding-top: 100px;
+}
+
+.main-bar {
+  position: fixed;
+  top: 0;
+  z-index: 2;
+  text-align: center;
+  height: 60px;
+  background-color: aqua;
+  border-bottom: 1px solid grey;
+}
+
+#logo {
+  height: 45px;
+  margin-top: 7px;
+  margin-left: 5px;
+  float: left;
+}
+
+.search-bar {
+  margin-top: 12px;
+  z-index: 3;
+}
+
+.cart {
+  position: fixed;
+  top: 8px;
+  right: 0;
+  padding: 0;
+}
+
+#cart-title {
+  font-size: 20px;
+  font-weight: bold;
+  vertical-align: bottom;
+}
+
+#cart-items {
+  position: relative;
+  top: -5px;
+  right: 80px;
+  color: red;
+  font-size: 24px;
+  font-weight: bold;
+}
