@@ -185,7 +185,7 @@ var items = [{
   category: 'Phones'
 },
 {
-  title: 'LG G3 4G LTE, 32GB, (GSM Unlocked‎) Smartphone',
+  title: 'LG G3 4G LTE, 32GB, (GSM Unlocked) Smartphone',
   manufacturer: 'LG',
   image: 'images/24.jpg',
   price: 265.00,
