@@ -194,7 +194,8 @@ document.getElementsByClassName('cart')[0].addEventListener("click", function() 
     document.getElementById('insert').nextSibling.remove();
   }
   var parentElement = document.getElementById('shop-items');
-
+  totalItems = 0;
+  totalPrice = 0;
   for (var i = 0; i < cart.length; i++) {
     totalItems += cart[i].quantity;
     totalPrice += cart[i].object.price * cart[i].quantity;
@@ -237,7 +238,7 @@ function createShoppingElement(obj, qty) {
   //Creating quantity dropdown
   element.appendChild(createElementWithClass('div','col-md-2'));
   element.lastChild.innerText = 'Qty:';
-  element.lastChild.appendChild(createElementWithClass('select','form-control'));
+  element.lastChild.appendChild(createElementWithClass('select','form-control shop-qty'));
   for (var i = 1; i <= 10; i++) {
     element.lastChild.lastChild.appendChild(document.createElement('option'));
     element.lastChild.lastChild.lastChild.innerText = i;
@@ -249,23 +250,44 @@ function createShoppingElement(obj, qty) {
 }
 //Event listener for deleting items from cart
 document.getElementById('shop-items').addEventListener("click", function(event) {
-  var length = document.getElementsByClassName('delete').length;
-  for (var i = 0; i < length; i++) {
-    if (event.target === document.getElementsByClassName('delete')[i]) {
-      totalItems -= cart[i].quantity;
-      totalPrice -= cart[i].object.price * cart[i].quantity;
-      document.getElementById('subtotal').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice;
-      document.getElementById('shop-box-text').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice;
-      document.getElementById('cart-items').innerText = totalItems;
-      cart.splice(i, 1);
-      var parent = document.getElementsByClassName('delete')[i].parentElement.parentElement;
-      if (i === 0) {
-        parent.nextSibling.remove();
+  if (event.target.className.split(' ').indexOf('delete') != -1) {
+    var length = document.getElementsByClassName('delete').length;
+    for (var i = 0; i < length; i++) {
+      if (event.target === document.getElementsByClassName('delete')[i]) {
+        totalItems -= cart[i].quantity;
+        totalPrice -= cart[i].object.price * cart[i].quantity;
+        document.getElementById('subtotal').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice;
+        document.getElementById('shop-box-text').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice;
+        document.getElementById('cart-items').innerText = totalItems;
+        cart.splice(i, 1);
+        var parent = document.getElementsByClassName('delete')[i].parentElement.parentElement;
+        if (i === 0) {
+          parent.nextSibling.remove();
+        }
+        else {
+          parent.previousSibling.remove();
+        }
+        parent.remove();
+        return;
       }
-      else {
-        parent.previousSibling.remove();
+    }
+  }
+})
+//Event listener for changing item quantity in the cart
+document.getElementById('shop-items').addEventListener("change", function(event) {
+  if (event.target.className.split(' ').indexOf('shop-qty') != -1) {
+    var length = document.getElementsByClassName('shop-qty').length;
+    for (var i = 0; i < length; i++) {
+      if (event.target === document.getElementsByClassName('shop-qty')[i]) {
+        var newQty = Number(document.getElementsByClassName('shop-qty')[i].value);
+        totalItems += (newQty - cart[i].quantity);
+        totalPrice += (newQty - cart[i].quantity) * cart[i].object.price;
+        cart[i].quantity = newQty;
+        document.getElementById('subtotal').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice;
+        document.getElementById('shop-box-text').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice;
+        document.getElementById('cart-items').innerText = totalItems;
+        return;
       }
-      parent.remove();
     }
   }
 })
