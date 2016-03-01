@@ -187,3 +187,14 @@ document.getElementsByClassName('cart-box')[0].addEventListener("click", functio
     addToCart(object, Number(document.getElementsByClassName('qty')[0].value));
   }
 })
+//Event listener and creation of the shopping cart page
+document.getElementsByClassName('cart')[0].addEventListener("click", function() {
+
+  var showList = document.querySelectorAll('.show');
+  for (var j = 0; j < showList.length; j++) {
+    showList[j].classList.remove('show');
+    showList[j].classList.add('hide');
+  }
+  document.getElementsByClassName('shop-page')[0].classList.remove('hide');
+  document.getElementsByClassName('shop-page')[0].classList.add('show');
+})

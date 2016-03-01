@@ -85,3 +85,15 @@ body {
 .cart-box {
   border: 1px solid black;
 }
+
+.shop-box {
+  border: 1px solid black;
+}
+
+.shop-image {
+  max-width: 100%;
+}
+
+#subtotal {
+  float: right;
+}
