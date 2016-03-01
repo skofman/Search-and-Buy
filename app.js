@@ -2,6 +2,7 @@
 var category = document.getElementById('category').innerText.trim();
 //Creating variables for qty, price
 var totalPrice = 0;
+var totalItems = 0;
 var cart = [];
 //Creating a category selector.
 document.getElementsByClassName('cat-selector')[0].addEventListener("click", function() {
@@ -189,8 +190,6 @@ document.getElementsByClassName('cart-box')[0].addEventListener("click", functio
 })
 //Event listener and creation of the shopping cart page
 document.getElementsByClassName('cart')[0].addEventListener("click", function() {
-  var totalItems = 0;
-  var totalPrice = 0;
   while (document.getElementById('insert').nextSibling) {
     document.getElementById('insert').nextSibling.remove();
   }
@@ -248,3 +247,25 @@ function createShoppingElement(obj, qty) {
   }
   return element;
 }
+//Event listener for deleting items from cart
+document.getElementById('shop-items').addEventListener("click", function(event) {
+  var length = document.getElementsByClassName('delete').length;
+  for (var i = 0; i < length; i++) {
+    if (event.target === document.getElementsByClassName('delete')[i]) {
+      totalItems -= cart[i].quantity;
+      totalPrice -= cart[i].object.price * cart[i].quantity;
+      document.getElementById('subtotal').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice;
+      document.getElementById('shop-box-text').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice;
+      document.getElementById('cart-items').innerText = totalItems;
+      cart.splice(i, 1);
+      var parent = document.getElementsByClassName('delete')[i].parentElement.parentElement;
+      if (i === 0) {
+        parent.nextSibling.remove();
+      }
+      else {
+        parent.previousSibling.remove();
+      }
+      parent.remove();
+    }
+  }
+})
