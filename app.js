@@ -189,7 +189,25 @@ document.getElementsByClassName('cart-box')[0].addEventListener("click", functio
 })
 //Event listener and creation of the shopping cart page
 document.getElementsByClassName('cart')[0].addEventListener("click", function() {
+  var totalItems = 0;
+  var totalPrice = 0;
+  while (document.getElementById('insert').nextSibling) {
+    document.getElementById('insert').nextSibling.remove();
+  }
+  var parentElement = document.getElementById('shop-items');
 
+  for (var i = 0; i < cart.length; i++) {
+    totalItems += cart[i].quantity;
+    totalPrice += cart[i].object.price * cart[i].quantity;
+    parentElement.appendChild(createShoppingElement(cart[i].object,cart[i].quantity));
+    parentElement.appendChild(document.createElement('hr'));
+  }
+  var subTotal = document.createElement('p');
+  subTotal.id = 'subtotal';
+  parentElement.appendChild(subTotal);
+  var subTotalText = "Subtotal (" + totalItems + " items): $" + totalPrice;
+  parentElement.lastChild.appendChild(document.createTextNode(subTotalText));
+  document.getElementById('shop-box-text').innerText = subTotalText;
   var showList = document.querySelectorAll('.show');
   for (var j = 0; j < showList.length; j++) {
     showList[j].classList.remove('show');
@@ -198,3 +216,35 @@ document.getElementsByClassName('cart')[0].addEventListener("click", function() 
   document.getElementsByClassName('shop-page')[0].classList.remove('hide');
   document.getElementsByClassName('shop-page')[0].classList.add('show');
 })
+//Function to create shopping cart element
+function createShoppingElement(obj, qty) {
+  var element = createElementWithClass('div','row');
+  //Adding the product image
+  element.appendChild(createElementWithClass('div','col-md-2'));
+  element.lastChild.appendChild(createElementWithClass('img','shop-image'));
+  element.lastChild.lastChild.setAttribute('src',obj.image);
+  //Adding product title
+  element.appendChild(createElementWithClass('div','col-md-6'));
+  element.lastChild.appendChild(createElementWithClass('h3','shop-title'));
+  element.lastChild.lastChild.innerText = obj.title;
+  //Adding the delete from cart button
+  element.lastChild.appendChild(createElementWithClass('button','delete'));
+  element.lastChild.lastChild.setAttribute('type','button');
+  element.lastChild.lastChild.innerText = 'Delete';
+  //Adding item price
+  element.appendChild(createElementWithClass('div','col-md-2'));
+  element.lastChild.appendChild(createElementWithClass('p','shop-price'));
+  element.lastChild.lastChild.innerText = '$' + obj.price;
+  //Creating quantity dropdown
+  element.appendChild(createElementWithClass('div','col-md-2'));
+  element.lastChild.innerText = 'Qty:';
+  element.lastChild.appendChild(createElementWithClass('select','form-control'));
+  for (var i = 1; i <= 10; i++) {
+    element.lastChild.lastChild.appendChild(document.createElement('option'));
+    element.lastChild.lastChild.lastChild.innerText = i;
+    if (qty === i) {
+      element.lastChild.lastChild.lastChild.setAttribute('selected',true)
+    }
+  }
+  return element;
+}
