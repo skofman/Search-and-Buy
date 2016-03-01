@@ -1,8 +1,8 @@
 //Creating a category variable, defaults to "All".
 var category = document.getElementById('category').innerText.trim();
 //Creating variables for qty, price
-var qty = 1;
 var totalPrice = 0;
+var cart = [];
 //Creating a category selector.
 document.getElementsByClassName('cat-selector')[0].addEventListener("click", function() {
   category = "All";
@@ -114,13 +114,19 @@ function clearOldResults() {
 
 //Create event listener that shows the product page for selected product
 document.getElementById('found-item').addEventListener("click", productPage);
-
+//Function to create the product page
 function productPage(el) {
+  //Finding the selected product
   for (var i = 0; i < items.length; i++) {
     if (el.target.getAttribute('data-serial') === items[i].serial) {
       var object = items[i];
       break;
     }
+  }
+  //Checking if add to cart button was clicked
+  if (el.target.className === 'cart-btn') {
+    addToCart(object, 1);
+    return;
   }
   //Clearing previous product information
   if (document.getElementById('product-title').lastChild) {
@@ -148,6 +154,7 @@ function productPage(el) {
     listElement.appendChild(listTextNode);
     document.getElementById('features').appendChild(listElement);
   }
+  document.getElementById('cart-box-btn').setAttribute('data-serial',object.serial);
   var showList = document.querySelectorAll('.show');
   for (var j = 0; j < showList.length; j++) {
     showList[j].classList.remove('show');
@@ -156,3 +163,27 @@ function productPage(el) {
   document.getElementsByClassName('product-page')[0].classList.remove('hide');
   document.getElementsByClassName('product-page')[0].classList.add('show');
 }
+//Add to cart function
+function addToCart(obj, qty) {
+  var currentQty = Number(document.getElementById('cart-items').innerText);
+  document.getElementById('cart-items').innerText = currentQty + qty;
+  for (var i = 0; i < cart.length; i++) {
+    if (cart[i].object.serial === obj.serial) {
+      cart[i].quantity += qty;
+      return;
+    }
+  }
+  cart.push({object: obj, quantity: qty});
+}
+//Event listener for add to cart button on the product page
+document.getElementsByClassName('cart-box')[0].addEventListener("click", function(el) {
+  for (var i = 0; i < items.length; i++) {
+    if (el.target.getAttribute('data-serial') === items[i].serial) {
+      var object = items[i];
+      break;
+    }
+  }
+  if (el.target.id === "cart-box-btn") {
+    addToCart(object, Number(document.getElementsByClassName('qty')[0].value));
+  }
+})
