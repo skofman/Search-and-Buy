@@ -1,5 +1,8 @@
 //Creating a category variable, defaults to "All".
 var category = document.getElementById('category').innerText.trim();
+//Creating variables for qty, price
+var qty = 1;
+var totalPrice = 0;
 //Creating a category selector.
 document.getElementsByClassName('cat-selector')[0].addEventListener("click", function() {
   category = "All";
@@ -31,6 +34,8 @@ for (var i = 0; i < 9; i++) {
     randomItems.push(randomItem);
     titleElements[i].innerHTML = items[randomItem].title;
     imageElements[i].setAttribute("src", items[randomItem].image);
+    titleElements[i].setAttribute('data-serial',items[randomItem].serial);
+    imageElements[i].setAttribute('data-serial',items[randomItem].serial);
   }
   else {
     i--;
@@ -43,20 +48,24 @@ function displayResults(object) {
   rowElement.appendChild(createElementWithClass('div','col-md-4'));
   rowElement.lastChild.appendChild(createElementWithClass('img','item-image center-block'));
   rowElement.lastChild.lastChild.setAttribute('src',object.image);
+  rowElement.lastChild.lastChild.setAttribute('data-serial',object.serial);
   rowElement.appendChild(createElementWithClass('div','col-md-8'));
   //Adding item title
-  rowElement.lastChild.appendChild(createElementWithClass('a','item-title'));
+  rowElement.lastChild.appendChild(createElementWithClass('h3','item-title'));
   var text = document.createTextNode(object.title);
   rowElement.lastChild.lastChild.appendChild(text);
+  rowElement.lastChild.lastChild.setAttribute('data-serial',object.serial);
   //Adding item price
   rowElement.lastChild.appendChild(createElementWithClass('p','item-price'));
   var price = document.createTextNode('$' + object.price);
   rowElement.lastChild.lastChild.appendChild(price);
+  rowElement.lastChild.lastChild.setAttribute('data-serial',object.serial);
   //Adding "Add to Cart" button
   rowElement.lastChild.appendChild(createElementWithClass('button','cart-btn'));
   var cartText = document.createTextNode('Add to Cart');
   rowElement.lastChild.lastChild.appendChild(cartText);
   rowElement.lastChild.lastChild.setAttribute('type','button');
+  rowElement.lastChild.lastChild.setAttribute('data-serial',object.serial);
   document.getElementsByClassName('results-items')[0].appendChild(rowElement);
   document.getElementsByClassName('results-items')[0].appendChild(document.createElement('hr'));
 };
@@ -101,4 +110,49 @@ function clearOldResults() {
   while (document.getElementsByClassName('results-items')[0].lastChild) {
     document.getElementsByClassName('results-items')[0].lastChild.remove();
   }
+}
+
+//Create event listener that shows the product page for selected product
+document.getElementById('found-item').addEventListener("click", productPage);
+
+function productPage(el) {
+  for (var i = 0; i < items.length; i++) {
+    if (el.target.getAttribute('data-serial') === items[i].serial) {
+      var object = items[i];
+      break;
+    }
+  }
+  //Clearing previous product information
+  if (document.getElementById('product-title').lastChild) {
+    document.getElementById('product-title').lastChild.remove();
+  }
+  if (document.getElementById('product-price').lastChild) {
+    document.getElementById('product-price').lastChild.remove();
+  }
+  while (document.getElementById('features').lastChild) {
+    document.getElementById('features').lastChild.remove();
+  }
+  //Adding image to product page
+  document.getElementById('product-image').setAttribute('src',object.image);
+  //Adding title to product page
+  var titleTextNode = document.createTextNode(object.title);
+  document.getElementById('product-title').appendChild(titleTextNode);
+  //Adding price to product page
+  var priceText = 'Price: $' + object.price;
+  var priceTextNode = document.createTextNode(priceText);
+  document.getElementById('product-price').appendChild(priceTextNode);
+  //Adding features to product page
+  for (var j = 0; j < object.description.length; j++) {
+    var listElement = document.createElement('li');
+    var listTextNode = document.createTextNode(object.description[j]);
+    listElement.appendChild(listTextNode);
+    document.getElementById('features').appendChild(listElement);
+  }
+  var showList = document.querySelectorAll('.show');
+  for (var j = 0; j < showList.length; j++) {
+    showList[j].classList.remove('show');
+    showList[j].classList.add('hide');
+  }
+  document.getElementsByClassName('product-page')[0].classList.remove('hide');
+  document.getElementsByClassName('product-page')[0].classList.add('show');
 }
