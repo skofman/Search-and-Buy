@@ -437,28 +437,4 @@ document.getElementById('checkout-box').addEventListener("click", function(event
       }
     }
   }
-
-  /*
-  if (event.target.className.split(' ').indexOf('delete') != -1) {
-    var length = document.getElementsByClassName('delete').length;
-    for (var i = 0; i < length; i++) {
-      if (event.target === document.getElementsByClassName('delete')[i]) {
-        totalItems -= cart[i].quantity;
-        totalPrice -= cart[i].object.price * cart[i].quantity;
-        document.getElementById('subtotal').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice;
-        document.getElementById('shop-box-text').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice;
-        document.getElementById('cart-items').innerText = totalItems;
-        cart.splice(i, 1);
-        var parent = document.getElementsByClassName('delete')[i].parentElement.parentElement;
-        if (i === 0) {
-          parent.nextSibling.remove();
-        }
-        else {
-          parent.previousSibling.remove();
-        }
-        parent.remove();
-        return;
-      }
-    }
-  }*/
 });
