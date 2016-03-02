@@ -323,3 +323,59 @@ function orderPage() {
   document.getElementById('charge-text').innerText = "We did not charge $" + (totalPrice * (1 + taxRate) + shippingPrice) + " to your credit card";
   showElements('order-page');
 }
+//Create event listener to the address modal
+document.getElementsByClassName('address-btn')[0].addEventListener("click", function() {
+  if (document.getElementById('warning-note')) {
+    document.getElementById('warning-note').remove();
+  }
+  if (document.getElementById('ship-name').value === "") {
+    warningNote('Please enter your name','ship-name');
+    return;
+  }
+  if (document.getElementById('ship-address').value === "") {
+    warningNote('Please enter your address','ship-address');
+    return;
+  }
+  if (document.getElementById('ship-city').value === "") {
+    warningNote('Please enter your city','ship-city');
+    return;
+  }
+  if (document.getElementById('ship-state').value === "") {
+    warningNote('Please enter your state','ship-state');
+    return;
+  }
+  if (document.getElementById('ship-zip').value === "" || isNaN(Number(document.getElementById('ship-zip').value))) {
+    warningNote('Please enter a valid zip code','ship-zip');
+    return;
+  }
+  if (document.getElementById('ship-country').value === "") {
+    warningNote('Please enter your country','ship-country');
+    return;
+  }
+  if (document.getElementById('ship-phone').value === "" || isNaN(Number(document.getElementById('ship-phone').value))) {
+    warningNote('Please enter a valid phone number','ship-phone');
+    return;
+  }
+  var element = document.getElementById('address-text');
+  while (element.lastChild) {
+    element.lastChild.remove();
+  }
+  var text = document.getElementById('ship-name').value;
+  element.appendChild(document.createTextNode(text));
+  element.appendChild(document.createElement('br'));
+  text = document.getElementById('ship-address').value + ' ' + document.getElementById('ship-unit').value;
+  element.appendChild(document.createTextNode(text));
+  element.appendChild(document.createElement('br'));
+  text = document.getElementById('ship-city').value + ', ' + document.getElementById('ship-state').value + ' ' + document.getElementById('ship-zip').value;
+  element.appendChild(document.createTextNode(text));
+  document.getElementById('address-close').click();
+})
+//Function to display a note on wrong input
+function warningNote(note, idLabel) {
+  var parentElement = document.getElementById(idLabel).parentElement;
+  var nextElement = document.getElementById(idLabel).nextSibling;
+  var element = document.createElement('p');
+  element.id = 'warning-note';
+  element.appendChild(document.createTextNode(note));
+  parentElement.insertBefore(element, nextElement);
+}
