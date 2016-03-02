@@ -370,6 +370,25 @@ document.getElementsByClassName('address-btn')[0].addEventListener("click", func
   element.appendChild(document.createTextNode(text));
   document.getElementById('address-close').click();
 })
+//Create event listener to the payment modal
+document.getElementsByClassName('payment-btn')[0].addEventListener("click", function() {
+  if (document.getElementById('warning-note')) {
+    document.getElementById('warning-note').remove();
+  }
+  if (document.getElementById('pay-card').value === "" || isNaN(Number(document.getElementById('pay-card').value))) {
+    warningNote('Please enter a valid card number','pay-card');
+    return;
+  }
+  if (document.getElementById('pay-name').value === "") {
+    warningNote('Please enter the name on the card','pay-name');
+    return;
+  }
+  var element = document.getElementById('payment-text');
+  element.lastChild.remove();
+  var text = 'Card ending in ' + document.getElementById('pay-card').value;
+  element.appendChild(document.createTextNode(text));
+  document.getElementById('payment-close').click();
+});
 //Function to display a note on wrong input
 function warningNote(note, idLabel) {
   var parentElement = document.getElementById(idLabel).parentElement;
