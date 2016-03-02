@@ -3,6 +3,8 @@ var category = document.getElementById('category').innerText.trim();
 //Creating variables for qty, price
 var totalPrice = 0;
 var totalItems = 0;
+var shippingPrice = 0;
+var taxRate = 0.08;
 var cart = [];
 //Creating a category selector.
 document.getElementsByClassName('cat-selector')[0].addEventListener("click", function() {
@@ -290,4 +292,54 @@ document.getElementById('shop-items').addEventListener("change", function(event)
       }
     }
   }
+})
+//Event listener for the checkout button
+document.getElementById('checkout').addEventListener("click", function(event) {
+  for (var i = 0; i < cart.length; i++) {
+    var element = createElementWithClass('div','row');
+    //Adding image to the review box
+    element.appendChild(createElementWithClass('div','col-md-2'));
+    element.lastChild.appendChild(createElementWithClass('img','review-image'));
+    element.lastChild.lastChild.setAttribute('src',cart[i].object.image);
+    //Adding item title
+    element.appendChild(createElementWithClass('div','col-md-10'));
+    element.lastChild.appendChild(document.createElement('h5'));
+    element.lastChild.lastChild.innerText = cart[i].object.title;
+    //Adding item price
+    element.lastChild.appendChild(document.createElement('h5'));
+    element.lastChild.lastChild.innerText = "$" + cart[i].object.price;
+    //Adding quantity dropdown
+    element.lastChild.appendChild(createElementWithClass('select','form-control review-item-qty'));
+    for (var j = 1; j <= 10; j++) {
+      element.lastChild.lastChild.appendChild(document.createElement('option'));
+      element.lastChild.lastChild.lastChild.innerText = j;
+      if (j === cart[i].quantity) {
+        element.lastChild.lastChild.lastChild.setAttribute('selected',true);
+      }
+    }
+    if (i != cart.length - 1) {
+      element.appendChild(document.createElement('hr'));
+    }
+    document.getElementById('review-items').appendChild(element);
+  }
+  //Updating information elements
+  document.getElementById('checkout-text').innerText = 'Checkout (' + totalItems + ' items)';
+  document.getElementById('checkout-box-items').innerText = "Items (" + totalItems + "):";
+  document.getElementById('checkout-price').innerText = "$" + totalPrice;
+  document.getElementById('shipping').innerText = "$" + shippingPrice;
+  document.getElementById('before-tax').innerText = "$" + (shippingPrice + totalPrice);
+  document.getElementById('tax').innerText = "$" + (totalPrice * taxRate);
+  document.getElementById('order-total').innerText = "$" + (totalPrice * (1 + taxRate) + shippingPrice);
+  document.getElementById('order-total-bottom').innerText = "Order total: $" + (totalPrice * (1 + taxRate) + shippingPrice);
+  //hide show elements
+  var showList = document.querySelectorAll('.show');
+  for (var j = 0; j < showList.length; j++) {
+    showList[j].classList.remove('show');
+    showList[j].classList.add('hide');
+  }
+  document.getElementsByClassName('main-bar')[0].classList.add('hide');
+  document.getElementsByClassName('checkout-bar')[0].classList.remove('hide');
+  document.getElementsByClassName('checkout-bar')[0].classList.add('show');
+  document.getElementsByClassName('checkout-page')[0].classList.remove('hide');
+  document.getElementsByClassName('checkout-page')[0].classList.add('show');
 })
