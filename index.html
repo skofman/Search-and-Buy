@@ -8,7 +8,7 @@
 </head>
 <body>
   <!-- Main bar -->
-  <div class="container-fluid main-bar hide">
+  <div class="container-fluid main-bar show">
     <div class="row">
       <div class="col-md-2 col-sm-3 col-xs-4">
         <a href="#"><img class="logo" src="images/logo.png"></a>
@@ -38,7 +38,7 @@
     </div>
   </div>
   <!-- Main initial screen -->
-  <div class="container main-screen hide">
+  <div class="container main-screen show">
     <!-- First row of items -->
     <div class="row">
       <div class="col-md-4">
@@ -123,20 +123,24 @@
   </div>
   <!-- Search results summary bar -->
   <div class="container results-summary hide">
-    <div class="row">
-      <div class="col-md-12">
-        <div id="results-text"></div>
-        <div class="btn-group results-sort">
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Relevance <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            <li><a href="#">Relevance</a></li>
-            <li><a href="#">Price: Low to High</a></li>
-            <li><a href="#">Price: High to Low</a></li>
-          </ul>
-          <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></button>
-          <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-th" aria-hidden="true"></span></button>
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div id="results-text"></div>
+            <div class="btn-group results-sort pull-right">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Relevance <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a href="#">Relevance</a></li>
+                <li><a href="#">Price: Low to High</a></li>
+                <li><a href="#">Price: High to Low</a></li>
+              </ul>
+              <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></button>
+              <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-th" aria-hidden="true"></span></button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -152,26 +156,30 @@
         </div>
         <div class="col-md-6">
           <h1 id="product-title"></h1>
-          <p id="product-price"></p>
+          <p class="text-danger" id="product-price"></p>
           <ul id="features">
           </ul>
         </div>
       </div>
-      <div class="col-md-2 cart-box">
-        Qty:
-        <select class="form-control qty">
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
-          <option>5</option>
-          <option>6</option>
-          <option>7</option>
-          <option>8</option>
-          <option>9</option>
-          <option>10</option>
-        </select>
-        <button type="button" id="cart-box-btn">Add to Cart</button>
+      <div class="col-md-2">
+        <div class="panel panel-default">
+          <div class="panel-body product-box">
+            Qty:
+            <select class="form-control qty">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
+              <option>9</option>
+              <option>10</option>
+            </select>
+            <button type="button" class="btn btn-success" id="cart-box-btn">Add to Cart</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -192,14 +200,18 @@
       </div>
       <hr id='insert'>
       </div>
-      <div class="col-md-2 shop-box">
-        <p id="shop-box-text"></p>
-        <button type="button" id="checkout">Checkout</button>
+      <div class="col-md-2">
+        <div class="panel panel-default">
+          <div class="panel-body cart-box">
+            <p id="shop-box-text"></p>
+            <button type="button" class="btn btn-success" id="checkout">Checkout</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
   <!-- Checkout page -->
-  <div class="container-fluid checkout-bar show">
+  <div class="container-fluid checkout-bar hide">
     <div class="row">
       <div class="col-md-2 col-sm-3 col-xs-4">
         <a href="#"><img class="logo" src="images/logo.png"></a>
@@ -211,7 +223,7 @@
       </div>
     </div>
   </div>
-  <div class="container checkout-page show">
+  <div class="container checkout-page hide">
     <div class="row">
       <div class="col-md-10">
         <div class="row">
@@ -334,54 +346,62 @@
         </div>
         <hr>
         <h4>3 Review items and shipping</h4>
-        <div id="review-box">
-          <h4 id="delivery-text">Estimated delivery:</h4>
-          <div class="row">
-            <div class="col-md-8" id="review-items">
-            </div>
-            <div class="col-md-4">
-              <input class="input-group" type="radio" name="ship">$19.95 One-Day Shipping</input>
-              <input class="input-group" type="radio" name="ship">$9.95 Two-Day Shipping</input>
-              <input class="input-group" type="radio" name="ship" checked>FREE Standard Shipping</input>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <h4 id="delivery-text">Estimated delivery:</h4>
+            <div class="row">
+              <div class="col-md-8" id="review-items">
+              </div>
+              <div class="col-md-4">
+                <input class="input-group" type="radio" name="ship">$19.95 One-Day Shipping</input>
+                <input class="input-group" type="radio" name="ship">$9.95 Two-Day Shipping</input>
+                <input class="input-group" type="radio" name="ship" checked>FREE Standard Shipping</input>
+              </div>
             </div>
           </div>
         </div>
-        <div id="bottom-order-box">
-          <div class="row">
-            <div class="col-md-12">
-              <button type="button" class="order">Place your order</button>
-              <h5 id="order-total-bottom">Order total: $$$</h5>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-md-12">
+                <button type="button" class="btn btn-success order">Place your order</button>
+                <h5 id="order-total-bottom">Order total: $$$</h5>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-md-2 checkout-box">
-        <button type="button" class="order">Place your order</button>
-        <hr>
-        <h5>Order Summary</h5>
-        <div class="row">
-          <div class="col-md-8">
-            <p id="checkout-box-items"></p>
-            <p>Shipping and handling:</p>
-            <br>
-            <p>Total before tax:</p>
-            <p>Estimated tax to be collected:</p>
-          </div>
-          <div class="col-md-4">
-            <p id="checkout-price"></p>
-            <p id="shipping"></p>
+      <div class="col-md-2">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <button type="button" class="btn btn-success order">Place your order</button>
             <hr>
-            <p id="before-tax"></p>
-            <p id="tax"></p>
-          </div>
-        </div>
-        <hr>
-        <div class="row">
-          <div class="col-md-8">
-            <h5>Order total</h5>
-          </div>
-          <div class="col-md-4">
-            <h5 id="order-total"></h5>
+            <h5>Order Summary</h5>
+            <div class="row">
+              <div class="col-md-8">
+                <p id="checkout-box-items"></p>
+                <p>Shipping and handling:</p>
+                <br>
+                <p>Total before tax:</p>
+                <p>Estimated tax to be collected:</p>
+              </div>
+              <div class="col-md-4">
+                <p id="checkout-price"></p>
+                <p id="shipping"></p>
+                <hr>
+                <p id="before-tax"></p>
+                <p id="tax"></p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-md-8">
+                <h5>Order total</h5>
+              </div>
+              <div class="col-md-4">
+                <h5 id="order-total"></h5>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -47,12 +47,12 @@ function displayResults(object) {
   rowElement.lastChild.lastChild.appendChild(text);
   rowElement.lastChild.lastChild.setAttribute('data-serial',object.serial);
   //Adding item price
-  rowElement.lastChild.appendChild(createElementWithClass('p','item-price'));
+  rowElement.lastChild.appendChild(createElementWithClass('p','item-price text-danger'));
   var price = document.createTextNode('$' + object.price);
   rowElement.lastChild.lastChild.appendChild(price);
   rowElement.lastChild.lastChild.setAttribute('data-serial',object.serial);
   //Adding "Add to Cart" button
-  rowElement.lastChild.appendChild(createElementWithClass('button','cart-btn'));
+  rowElement.lastChild.appendChild(createElementWithClass('button','btn btn-success cart-btn'));
   var cartText = document.createTextNode('Add to Cart');
   rowElement.lastChild.lastChild.appendChild(cartText);
   rowElement.lastChild.lastChild.setAttribute('type','button');
@@ -94,7 +94,6 @@ function clearOldResults() {
     document.getElementsByClassName('results-items')[0].lastChild.remove();
   }
 }
-
 //Create event listener that shows the product page for selected product
 document.getElementById('found-item').addEventListener("click", productPage);
 //Function to create the product page
@@ -107,7 +106,7 @@ function productPage(el) {
     }
   }
   //Checking if add to cart button was clicked
-  if (el.target.className === 'cart-btn') {
+  if (el.target.className.split(' ').indexOf('cart-btn') != -1) {
     addToCart(object, 1);
     return;
   }
@@ -153,7 +152,7 @@ function addToCart(obj, qty) {
   cart.push({object: obj, quantity: qty});
 }
 //Event listener for add to cart button on the product page
-document.getElementsByClassName('cart-box')[0].addEventListener("click", function(el) {
+document.getElementsByClassName('product-box')[0].addEventListener("click", function(el) {
   for (var i = 0; i < items.length; i++) {
     if (el.target.getAttribute('data-serial') === items[i].serial) {
       var object = items[i];
@@ -178,7 +177,7 @@ document.getElementsByClassName('cart')[0].addEventListener("click", function() 
     parentElement.appendChild(createShoppingElement(cart[i].object,cart[i].quantity));
     parentElement.appendChild(document.createElement('hr'));
   }
-  var subTotal = document.createElement('p');
+  var subTotal = createElementWithClass('p','pull-right');
   subTotal.id = 'subtotal';
   parentElement.appendChild(subTotal);
   var subTotalText = "Subtotal (" + totalItems + " items): $" + totalPrice;
@@ -198,7 +197,7 @@ function createShoppingElement(obj, qty) {
   element.lastChild.appendChild(createElementWithClass('h3','shop-title'));
   element.lastChild.lastChild.innerText = obj.title;
   //Adding the delete from cart button
-  element.lastChild.appendChild(createElementWithClass('button','delete'));
+  element.lastChild.appendChild(createElementWithClass('button','btn btn-info delete'));
   element.lastChild.lastChild.setAttribute('type','button');
   element.lastChild.lastChild.innerText = 'Delete';
   //Adding item price
