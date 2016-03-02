@@ -48,7 +48,7 @@ function displayResults(object) {
   rowElement.lastChild.lastChild.setAttribute('data-serial',object.serial);
   //Adding item price
   rowElement.lastChild.appendChild(createElementWithClass('p','item-price text-danger'));
-  var price = document.createTextNode('$' + object.price);
+  var price = document.createTextNode('$' + object.price.toFixed(2));
   rowElement.lastChild.lastChild.appendChild(price);
   rowElement.lastChild.lastChild.setAttribute('data-serial',object.serial);
   //Adding "Add to Cart" button
@@ -126,7 +126,7 @@ function productPage(el) {
   var titleTextNode = document.createTextNode(object.title);
   document.getElementById('product-title').appendChild(titleTextNode);
   //Adding price to product page
-  var priceText = 'Price: $' + object.price;
+  var priceText = 'Price: $' + object.price.toFixed(2);
   var priceTextNode = document.createTextNode(priceText);
   document.getElementById('product-price').appendChild(priceTextNode);
   //Adding features to product page
@@ -180,7 +180,7 @@ document.getElementsByClassName('cart')[0].addEventListener("click", function() 
   var subTotal = createElementWithClass('p','pull-right');
   subTotal.id = 'subtotal';
   parentElement.appendChild(subTotal);
-  var subTotalText = "Subtotal (" + totalItems + " items): $" + totalPrice;
+  var subTotalText = "Subtotal (" + totalItems + " items): $" + totalPrice.toFixed(2);
   parentElement.lastChild.appendChild(document.createTextNode(subTotalText));
   document.getElementById('shop-box-text').innerText = subTotalText;
   showElements('main-bar','shop-page');
@@ -203,7 +203,7 @@ function createShoppingElement(obj, qty) {
   //Adding item price
   element.appendChild(createElementWithClass('div','col-md-2'));
   element.lastChild.appendChild(createElementWithClass('p','shop-price'));
-  element.lastChild.lastChild.innerText = '$' + obj.price;
+  element.lastChild.lastChild.innerText = '$' + obj.price.toFixed(2);
   //Creating quantity dropdown
   element.appendChild(createElementWithClass('div','col-md-2'));
   element.lastChild.innerText = 'Qty:';
@@ -225,8 +225,8 @@ document.getElementById('shop-items').addEventListener("click", function(event) 
       if (event.target === document.getElementsByClassName('delete')[i]) {
         totalItems -= cart[i].quantity;
         totalPrice -= cart[i].object.price * cart[i].quantity;
-        document.getElementById('subtotal').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice;
-        document.getElementById('shop-box-text').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice;
+        document.getElementById('subtotal').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice.toFixed(2);
+        document.getElementById('shop-box-text').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice.toFixed(2);
         document.getElementById('cart-items').innerText = totalItems;
         cart.splice(i, 1);
         var parent = document.getElementsByClassName('delete')[i].parentElement.parentElement;
@@ -252,8 +252,8 @@ document.getElementById('shop-items').addEventListener("change", function(event)
         totalItems += (newQty - cart[i].quantity);
         totalPrice += (newQty - cart[i].quantity) * cart[i].object.price;
         cart[i].quantity = newQty;
-        document.getElementById('subtotal').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice;
-        document.getElementById('shop-box-text').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice;
+        document.getElementById('subtotal').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice.fixed(2);
+        document.getElementById('shop-box-text').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice.toFixed(2);
         document.getElementById('cart-items').innerText = totalItems;
         return;
       }
@@ -274,7 +274,7 @@ document.getElementById('checkout').addEventListener("click", function(event) {
     element.lastChild.lastChild.innerText = cart[i].object.title;
     //Adding item price
     element.lastChild.appendChild(document.createElement('h5'));
-    element.lastChild.lastChild.innerText = "$" + cart[i].object.price;
+    element.lastChild.lastChild.innerText = "$" + cart[i].object.price.toFixed(2);
     //Adding quantity dropdown
     element.lastChild.appendChild(createElementWithClass('select','form-control review-item-qty'));
     for (var j = 1; j <= 10; j++) {
@@ -292,12 +292,12 @@ document.getElementById('checkout').addEventListener("click", function(event) {
   //Updating information elements
   document.getElementById('checkout-text').innerText = 'Checkout (' + totalItems + ' items)';
   document.getElementById('checkout-box-items').innerText = "Items (" + totalItems + "):";
-  document.getElementById('checkout-price').innerText = "$" + totalPrice;
-  document.getElementById('shipping').innerText = "$" + shippingPrice;
-  document.getElementById('before-tax').innerText = "$" + (shippingPrice + totalPrice);
-  document.getElementById('tax').innerText = "$" + (totalPrice * taxRate);
-  document.getElementById('order-total').innerText = "$" + (totalPrice * (1 + taxRate) + shippingPrice);
-  document.getElementById('order-total-bottom').innerText = "Order total: $" + (totalPrice * (1 + taxRate) + shippingPrice);
+  document.getElementById('checkout-price').innerText = "$" + totalPrice.toFixed(2);
+  document.getElementById('shipping').innerText = "$" + shippingPrice.toFixed(2);
+  document.getElementById('before-tax').innerText = "$" + (shippingPrice + totalPrice).toFixed(2);
+  document.getElementById('tax').innerText = "$" + (totalPrice * taxRate).toFixed(2);
+  document.getElementById('order-total').innerText = "$" + (totalPrice * (1 + taxRate) + shippingPrice).toFixed(2);
+  document.getElementById('order-total-bottom').innerText = "Order total: $" + (totalPrice * (1 + taxRate) + shippingPrice).toFixed(2);
   showElements('checkout-bar','checkout-page');
 })
 //Function to show and hide HTML elements
@@ -316,7 +316,7 @@ document.getElementsByClassName('order')[0].addEventListener("click", orderPage)
 document.getElementsByClassName('order')[1].addEventListener("click", orderPage);
 
 function orderPage() {
-  document.getElementById('charge-text').innerText = "We did not charge $" + (totalPrice * (1 + taxRate) + shippingPrice) + " to your credit card";
+  document.getElementById('charge-text').innerText = "We did not charge $" + (totalPrice * (1 + taxRate) + shippingPrice).toFixed(2) + " to your credit card";
   showElements('order-page');
 }
 //Create event listener to the address modal
