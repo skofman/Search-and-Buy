@@ -2,7 +2,8 @@ body {
   padding-top: 100px;
 }
 
-.main-bar {
+.main-bar,
+.checkout-bar {
   position: fixed;
   top: 0;
   z-index: 2;
@@ -10,9 +11,10 @@ body {
   height: 60px;
   background-color: aqua;
   border-bottom: 1px solid grey;
+  width: 100%;
 }
 
-#logo {
+.logo {
   height: 45px;
   margin-top: 7px;
   margin-left: 5px;
@@ -96,4 +98,26 @@ body {
 
 #subtotal {
   float: right;
+}
+
+#checkout-text {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.checkout-box {
+  border: 1px solid black;
+}
+
+#review-box {
+  border: 1px solid black;
+}
+
+.review-image {
+  max-width: 100%;
+}
+
+#bottom-order-box {
+  border: 1px solid black;
+  margin-top: 10px;
 }

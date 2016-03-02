@@ -8,10 +8,10 @@
 </head>
 <body>
   <!-- Main bar -->
-  <div class="container-fluid main-bar">
+  <div class="container-fluid main-bar hide">
     <div class="row">
       <div class="col-md-2 col-sm-3 col-xs-4">
-        <a href="#"><img id="logo" src="images/logo.png"></a>
+        <a href="#"><img class="logo" src="images/logo.png"></a>
       </div>
       <div class="col-md-8 col-sm-6 col-xs-4">
         <div class="input-group search-bar">
@@ -38,7 +38,7 @@
     </div>
   </div>
   <!-- Main initial screen -->
-  <div class="container main-screen show">
+  <div class="container main-screen hide">
     <!-- First row of items -->
     <div class="row">
       <div class="col-md-4">
@@ -198,10 +198,118 @@
       </div>
     </div>
   </div>
+  <!-- Checkout page -->
+  <div class="container-fluid checkout-bar">
+    <div class="row">
+      <div class="col-md-2 col-sm-3 col-xs-4">
+        <a href="#"><img class="logo" src="images/logo.png"></a>
+      </div>
+      <div class="col-md-8 col-sm-6 col-xs-4">
+        <h2 id="checkout-text">placeholder</h2>
+      </div>
+      <div class="col-md-2 col-sm-3 col-xs-4">
+      </div>
+    </div>
+  </div>
+  <div class="container checkout-page">
+    <div class="row">
+      <div class="col-md-10">
+        <div class="row">
+          <div class="col-md-3">
+            <h4>1 Shipping address</h4>
+          </div>
+          <div class="col-md-6">
+            <p>please enter your address</p>
+          </div>
+          <div class="col-md-3">
+            <button type="button" id="address-btn">Change</button>
+          </div>
+          <hr>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-md-3">
+            <h4>2 Payment method</h4>
+          </div>
+          <div class="col-md-6">
+            <p>please enter payment mehtod</p>
+          </div>
+          <div class="col-md-3">
+            <button type="button" id="payment-btn">Change</button>
+          </div>
+        </div>
+        <hr>
+        <h4>3 Review items and shipping</h4>
+        <div id="review-box">
+          <h4>Estimated delivery:</h4>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="col-md-2">
+                  <img class="review-image" src="images/1.jpg">
+                </div>
+                <div class="col-md-10">
+                  <h5>TITLE</h5>
+                  <h5>PRICE</h5>
+                  <select class="form-control">
+                    <option>1</option>
+                    <option>2</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <input class="input-group" type="radio" name="ship">One Day</input>
+              <input class="input-group" type="radio" name="ship">Two Day</input>
+              <input class="input-group" type="radio" name="ship">Standard</input>
+            </div>
+          </div>
+        </div>
+        <div id="bottom-order-box">
+          <div class="row">
+            <div class="col-md-12">
+              <button type="button" class="order">Place your order</button>
+              <h5>Order total: $$$</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2 checkout-box">
+        <button type="button" class="order">Place your order</button>
+        <hr>
+        <h5>Order Summary</h5>
+        <div class="row">
+          <div class="col-md-8">
+            <p id="checkout-box-items">Items</p>
+            <p>Shipping and handling:</p>
+            <br>
+            <p>Total before tax:</p>
+            <p>Estimated tax to be collected:</p>
+          </div>
+          <div class="col-md-4">
+            <p id="checkout-price">$$$</p>
+            <p id="shipping">$$$</p>
+            <hr>
+            <p id="before-tax">$$$</p>
+            <p id="tax">$$$</p>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-md-8">
+            <h5>Order total</h5>
+          </div>
+          <div class="col-md-4">
+            <h5 id="order-total">$$$</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script src="data.js"></script>
-<script src="app.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
