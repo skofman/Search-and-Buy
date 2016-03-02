@@ -1,6 +1,6 @@
 //Creating a category variable, defaults to "All".
 var category = document.getElementById('category').innerText.trim();
-//Creating variables for qty, price
+//Creating variables for qty, price and cart items
 var totalPrice = 0;
 var totalItems = 0;
 var shippingPrice = 0;
@@ -89,15 +89,7 @@ document.getElementById('search-btn').addEventListener("click", function() {
   var text = document.createTextNode(counter + ' results for "' + searchValue + '"');
   document.getElementById('results-text').appendChild(text);
   //Show results page and hide all other pages
-  var showList = document.querySelectorAll('.show');
-  for (var j = 0; j < showList.length; j++) {
-    showList[j].classList.remove('show');
-    showList[j].classList.add('hide');
-  }
-  document.getElementsByClassName('results-summary')[0].classList.remove('hide');
-  document.getElementsByClassName('results-summary')[0].classList.add('show');
-  document.getElementsByClassName('results-items')[0].classList.remove('hide');
-  document.getElementsByClassName('results-items')[0].classList.add('show');
+  showElements('main-bar','results-summary','results-items');
 });
 //Function to create element with chosen class names
 function createElementWithClass(el, classLabel) {
@@ -158,13 +150,7 @@ function productPage(el) {
     document.getElementById('features').appendChild(listElement);
   }
   document.getElementById('cart-box-btn').setAttribute('data-serial',object.serial);
-  var showList = document.querySelectorAll('.show');
-  for (var j = 0; j < showList.length; j++) {
-    showList[j].classList.remove('show');
-    showList[j].classList.add('hide');
-  }
-  document.getElementsByClassName('product-page')[0].classList.remove('hide');
-  document.getElementsByClassName('product-page')[0].classList.add('show');
+  showElements('main-bar','product-page');
 }
 //Add to cart function
 function addToCart(obj, qty) {
@@ -210,13 +196,7 @@ document.getElementsByClassName('cart')[0].addEventListener("click", function() 
   var subTotalText = "Subtotal (" + totalItems + " items): $" + totalPrice;
   parentElement.lastChild.appendChild(document.createTextNode(subTotalText));
   document.getElementById('shop-box-text').innerText = subTotalText;
-  var showList = document.querySelectorAll('.show');
-  for (var j = 0; j < showList.length; j++) {
-    showList[j].classList.remove('show');
-    showList[j].classList.add('hide');
-  }
-  document.getElementsByClassName('shop-page')[0].classList.remove('hide');
-  document.getElementsByClassName('shop-page')[0].classList.add('show');
+  showElements('main-bar','shop-page');
 })
 //Function to create shopping cart element
 function createShoppingElement(obj, qty) {
@@ -317,6 +297,9 @@ document.getElementById('checkout').addEventListener("click", function(event) {
         element.lastChild.lastChild.lastChild.setAttribute('selected',true);
       }
     }
+    element.lastChild.lastChild.appendChild(document.createElement('option'));
+    element.lastChild.lastChild.lastChild.innerText = 'Delete';
+
     if (i != cart.length - 1) {
       element.appendChild(document.createElement('hr'));
     }
@@ -331,15 +314,16 @@ document.getElementById('checkout').addEventListener("click", function(event) {
   document.getElementById('tax').innerText = "$" + (totalPrice * taxRate);
   document.getElementById('order-total').innerText = "$" + (totalPrice * (1 + taxRate) + shippingPrice);
   document.getElementById('order-total-bottom').innerText = "Order total: $" + (totalPrice * (1 + taxRate) + shippingPrice);
-  //hide show elements
-  var showList = document.querySelectorAll('.show');
-  for (var j = 0; j < showList.length; j++) {
-    showList[j].classList.remove('show');
-    showList[j].classList.add('hide');
-  }
-  document.getElementsByClassName('main-bar')[0].classList.add('hide');
-  document.getElementsByClassName('checkout-bar')[0].classList.remove('hide');
-  document.getElementsByClassName('checkout-bar')[0].classList.add('show');
-  document.getElementsByClassName('checkout-page')[0].classList.remove('hide');
-  document.getElementsByClassName('checkout-page')[0].classList.add('show');
+  showElements('checkout-bar','checkout-page');
 })
+//Function to show and hide HTML elements
+function showElements() {
+  var showList = document.querySelectorAll('.show');
+  for (var i = 0; i < showList.length; i++) {
+    showList[i].classList.remove('show');
+    showList[i].classList.add('hide');
+  }
+  for (var j = 0; j < arguments.length; j++) {
+    document.getElementsByClassName(arguments[j])[0].classList.add('show');
+  }
+}
