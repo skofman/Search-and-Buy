@@ -260,7 +260,7 @@ document.getElementById('shop-items').addEventListener("change", function(event)
     }
   }
 })
-//Event listener for the checkout button
+//Event listener for the checkout button creating checkout page
 document.getElementById('checkout').addEventListener("click", function(event) {
   for (var i = 0; i < cart.length; i++) {
     var element = createElementWithClass('div','row');
@@ -284,12 +284,9 @@ document.getElementById('checkout').addEventListener("click", function(event) {
         element.lastChild.lastChild.lastChild.setAttribute('selected',true);
       }
     }
-    element.lastChild.lastChild.appendChild(document.createElement('option'));
-    element.lastChild.lastChild.lastChild.innerText = 'Delete';
-
-    if (i != cart.length - 1) {
-      element.appendChild(document.createElement('hr'));
-    }
+    element.lastChild.appendChild(createElementWithClass('button','btn btn-info checkout-delete'));
+    element.lastChild.lastChild.innerText = 'Delete';
+    element.lastChild.lastChild.setAttribute('type','button');
     document.getElementById('review-items').appendChild(element);
   }
   //Updating information elements
@@ -397,3 +394,71 @@ function warningNote(note, idLabel) {
   element.appendChild(document.createTextNode(note));
   parentElement.insertBefore(element, nextElement);
 }
+//Event listener for changing quantity or deleting items on the checkout page
+document.getElementById('checkout-box').addEventListener("change", function(event) {
+  if (event.target.className.split(' ').indexOf('review-item-qty') != -1) {
+    var length = document.getElementsByClassName('review-item-qty').length;
+    for (var i = 0; i < length; i++) {
+      if (event.target === document.getElementsByClassName('review-item-qty')[i]) {
+        var newQty = Number(document.getElementsByClassName('review-item-qty')[i].value);
+        totalItems += (newQty - cart[i].quantity);
+        totalPrice += (newQty - cart[i].quantity) * cart[i].object.price;
+        cart[i].quantity = newQty;
+        document.getElementById('checkout-text').innerText = 'Checkout (' + totalItems + ' items)';
+        document.getElementById('checkout-box-items').innerText = "Items (" + totalItems + "):";
+        document.getElementById('checkout-price').innerText = "$" + totalPrice;
+        document.getElementById('before-tax').innerText = "$" + (shippingPrice + totalPrice);
+        document.getElementById('tax').innerText = "$" + (totalPrice * taxRate);
+        document.getElementById('order-total').innerText = "$" + (totalPrice * (1 + taxRate) + shippingPrice);
+        document.getElementById('order-total-bottom').innerText = "Order total: $" + (totalPrice * (1 + taxRate) + shippingPrice);
+      }
+    }
+  }
+});
+//Creating event listener to delete items from the checkout page
+document.getElementById('checkout-box').addEventListener("click", function(event) {
+  if (event.target.className.split(' ').indexOf('checkout-delete') != -1) {
+    var length = document.getElementsByClassName('checkout-delete').length;
+    for (var i = 0; i < length; i++) {
+      if (event.target === document.getElementsByClassName('checkout-delete')[i]) {
+        totalItems -= cart[i].quantity;
+        totalPrice -= cart[i].object.price * cart[i].quantity;
+        document.getElementById('checkout-text').innerText = 'Checkout (' + totalItems + ' items)';
+        document.getElementById('checkout-box-items').innerText = "Items (" + totalItems + "):";
+        document.getElementById('checkout-price').innerText = "$" + totalPrice;
+        document.getElementById('before-tax').innerText = "$" + (shippingPrice + totalPrice);
+        document.getElementById('tax').innerText = "$" + (totalPrice * taxRate);
+        document.getElementById('order-total').innerText = "$" + (totalPrice * (1 + taxRate) + shippingPrice);
+        document.getElementById('order-total-bottom').innerText = "Order total: $" + (totalPrice * (1 + taxRate) + shippingPrice);
+        cart.splice(i, 1);
+        var parent = document.getElementsByClassName('checkout-delete')[i].parentElement.parentElement;
+        parent.remove();
+        return;
+      }
+    }
+  }
+
+  /*
+  if (event.target.className.split(' ').indexOf('delete') != -1) {
+    var length = document.getElementsByClassName('delete').length;
+    for (var i = 0; i < length; i++) {
+      if (event.target === document.getElementsByClassName('delete')[i]) {
+        totalItems -= cart[i].quantity;
+        totalPrice -= cart[i].object.price * cart[i].quantity;
+        document.getElementById('subtotal').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice;
+        document.getElementById('shop-box-text').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice;
+        document.getElementById('cart-items').innerText = totalItems;
+        cart.splice(i, 1);
+        var parent = document.getElementsByClassName('delete')[i].parentElement.parentElement;
+        if (i === 0) {
+          parent.nextSibling.remove();
+        }
+        else {
+          parent.previousSibling.remove();
+        }
+        parent.remove();
+        return;
+      }
+    }
+  }*/
+});
