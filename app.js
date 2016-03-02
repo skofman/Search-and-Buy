@@ -327,3 +327,11 @@ function showElements() {
     document.getElementsByClassName(arguments[j])[0].classList.add('show');
   }
 }
+//Create an event listener for the "Place your order" buttons
+document.getElementsByClassName('order')[0].addEventListener("click", orderPage);
+document.getElementsByClassName('order')[1].addEventListener("click", orderPage);
+
+function orderPage() {
+  document.getElementById('charge-text').innerText = "We did not charge $" + (totalPrice * (1 + taxRate) + shippingPrice) + " to your credit card";
+  showElements('order-page');
+}

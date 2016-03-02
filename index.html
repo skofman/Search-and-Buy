@@ -8,7 +8,7 @@
 </head>
 <body>
   <!-- Main bar -->
-  <div class="container-fluid main-bar">
+  <div class="container-fluid main-bar show">
     <div class="row">
       <div class="col-md-2 col-sm-3 col-xs-4">
         <a href="#"><img class="logo" src="images/logo.png"></a>
@@ -38,7 +38,7 @@
     </div>
   </div>
   <!-- Main initial screen -->
-  <div class="container main-screen hide">
+  <div class="container main-screen show">
     <!-- First row of items -->
     <div class="row">
       <div class="col-md-4">
@@ -211,7 +211,7 @@
       </div>
     </div>
   </div>
-  <div class="container checkout-page show">
+  <div class="container checkout-page hide">
     <div class="row">
       <div class="col-md-10">
         <div class="row">
@@ -386,6 +386,13 @@
         </div>
       </div>
     </div>
+  </div>
+  <!-- Order confirmation page -->
+  <div class="container order-page hide">
+    <h1>Order confirmation</h1>
+    <h2>Thank you for shopping with "Search and Buy"</h2>
+    <h2>Your order will not be delivered on: since we don't really sell anything</h2>
+    <h2 id="charge-text">We did not charge $$$ to your credit card</h2>
   </div>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
