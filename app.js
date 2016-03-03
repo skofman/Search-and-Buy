@@ -53,7 +53,8 @@ function displayResults(object) {
   rowElement.lastChild.lastChild.setAttribute('data-serial',object.serial);
   //Adding "Add to Cart" button
   rowElement.lastChild.appendChild(createElementWithClass('button','btn btn-success cart-btn'));
-  var cartText = document.createTextNode('Add to Cart');
+  rowElement.lastChild.lastChild.appendChild(createElementWithClass('i','fa fa-cart-plus fa-lg'));
+  var cartText = document.createTextNode('  Add to Cart');
   rowElement.lastChild.lastChild.appendChild(cartText);
   rowElement.lastChild.lastChild.setAttribute('type','button');
   rowElement.lastChild.lastChild.setAttribute('data-serial',object.serial);
@@ -211,7 +212,9 @@ function createShoppingElement(obj, qty) {
   //Adding the delete from cart button
   element.lastChild.appendChild(createElementWithClass('button','btn btn-info delete'));
   element.lastChild.lastChild.setAttribute('type','button');
-  element.lastChild.lastChild.innerText = 'Delete';
+  element.lastChild.lastChild.appendChild(createElementWithClass('i','fa fa-trash fa-lg'));
+  var text = document.createTextNode('  Delete');
+  element.lastChild.lastChild.appendChild(text);
   //Adding item price
   element.appendChild(createElementWithClass('div','col-md-2'));
   element.lastChild.appendChild(createElementWithClass('h4','text-danger shop-price'));
@@ -238,7 +241,7 @@ document.getElementById('shop-items').addEventListener("click", function(event) 
         totalPrice -= cart[i].object.price * cart[i].quantity;
         document.getElementById('subtotal').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice.toFixed(2);
         document.getElementById('shop-box-text').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice.toFixed(2);
-        document.getElementById('cart-items').innerText = totalItems;
+        document.getElementById('cart-items').innerText = " (" + totalItems + ")";
         cart.splice(i, 1);
         var parent = document.getElementsByClassName('delete')[i].parentElement.parentElement;
         if (i === 0) {
@@ -265,7 +268,7 @@ document.getElementById('shop-items').addEventListener("change", function(event)
         cart[i].quantity = newQty;
         document.getElementById('subtotal').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice.toFixed(2);
         document.getElementById('shop-box-text').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice.toFixed(2);
-        document.getElementById('cart-items').innerText = totalItems;
+        document.getElementById('cart-items').innerText = " (" + totalItems + ")";
         return;
       }
     }
@@ -288,7 +291,7 @@ document.getElementById('checkout').addEventListener("click", function(event) {
     element.lastChild.appendChild(document.createElement('h5'));
     element.lastChild.lastChild.innerText = cart[i].object.title;
     //Adding item price
-    element.lastChild.appendChild(document.createElement('h5'));
+    element.lastChild.appendChild(createElementWithClass('h5','text-danger'));
     element.lastChild.lastChild.innerText = "$" + cart[i].object.price.toFixed(2);
     //Adding quantity dropdown
     element.lastChild.appendChild(createElementWithClass('form','form-inline'));
@@ -302,7 +305,9 @@ document.getElementById('checkout').addEventListener("click", function(event) {
       }
     }
     element.lastChild.lastChild.lastChild.appendChild(createElementWithClass('button','btn btn-info checkout-delete'));
-    element.lastChild.lastChild.lastChild.lastChild.innerText = 'Delete';
+    element.lastChild.lastChild.lastChild.lastChild.appendChild(createElementWithClass('i','fa fa-trash fa-lg'));
+    var text = document.createTextNode('  Delete');
+    element.lastChild.lastChild.lastChild.lastChild.appendChild(text);
     element.lastChild.lastChild.lastChild.lastChild.setAttribute('type','button');
     document.getElementById('review-items').appendChild(element);
   }
@@ -445,7 +450,7 @@ document.getElementById('checkout-box').addEventListener("click", function(event
         totalPrice -= cart[i].object.price * cart[i].quantity;
         updateCheckoutPage();
         cart.splice(i, 1);
-        var parent = document.getElementsByClassName('checkout-delete')[i].parentElement.parentElement;
+        var parent = document.getElementsByClassName('checkout-delete')[i].parentElement.parentElement.parentElement.parentElement;
         parent.remove();
         return;
       }
