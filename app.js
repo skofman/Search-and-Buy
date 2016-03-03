@@ -16,7 +16,7 @@ document.getElementsByClassName('cat-menu')[0].addEventListener("click", functio
 });
 //Populate front page with random items.
 var titleElements = document.getElementsByClassName('main-title');
-var imageElements = document.getElementsByClassName('main-image');
+var imageElements = document.getElementsByClassName('panel-image');
 var randomItems = [];
 
 for (var i = 0; i < 9; i++) {
@@ -37,7 +37,7 @@ function displayResults(object) {
   var rowElement = createElementWithClass('div','row');
   //Adding item image
   rowElement.appendChild(createElementWithClass('div','col-md-4'));
-  rowElement.lastChild.appendChild(createElementWithClass('img','item-image center-block'));
+  rowElement.lastChild.appendChild(createElementWithClass('img','img-responsive enter-block'));
   rowElement.lastChild.lastChild.setAttribute('src',object.image);
   rowElement.lastChild.lastChild.setAttribute('data-serial',object.serial);
   rowElement.appendChild(createElementWithClass('div','col-md-8'));
@@ -47,7 +47,7 @@ function displayResults(object) {
   rowElement.lastChild.lastChild.appendChild(text);
   rowElement.lastChild.lastChild.setAttribute('data-serial',object.serial);
   //Adding item price
-  rowElement.lastChild.appendChild(createElementWithClass('p','item-price text-danger'));
+  rowElement.lastChild.appendChild(createElementWithClass('h4','item-price text-danger'));
   var price = document.createTextNode('$' + object.price.toFixed(2));
   rowElement.lastChild.lastChild.appendChild(price);
   rowElement.lastChild.lastChild.setAttribute('data-serial',object.serial);
@@ -109,6 +109,9 @@ function productPage(el) {
       break;
     }
   }
+  if (!object) {
+    return;
+  }
   //Checking if add to cart button was clicked
   if (el.target.className.split(' ').indexOf('cart-btn') != -1) {
     addToCart(object, 1);
@@ -145,8 +148,9 @@ function productPage(el) {
 }
 //Add to cart function
 function addToCart(obj, qty) {
-  var currentQty = Number(document.getElementById('cart-items').innerText);
-  document.getElementById('cart-items').innerText = currentQty + qty;
+  var currentQtyString = document.getElementById('cart-items').innerText.trim();
+  var currentQty = Number(currentQtyString.slice(1, currentQtyString.length - 1));
+  document.getElementById('cart-items').innerText = " (" + (currentQty + qty) + ")";
   for (var i = 0; i < cart.length; i++) {
     if (cart[i].object.serial === obj.serial) {
       cart[i].quantity += qty;
@@ -168,7 +172,7 @@ document.getElementsByClassName('product-box')[0].addEventListener("click", func
   }
 })
 //Event listener and creation of the shopping cart page
-document.getElementsByClassName('cart')[0].addEventListener("click", function() {
+document.getElementsByClassName('cart-go')[0].addEventListener("click", function() {
   if (cart.length === 0) {
     alert('Your cart is empty. Please add some items first.');
     return;
@@ -198,11 +202,11 @@ function createShoppingElement(obj, qty) {
   var element = createElementWithClass('div','row');
   //Adding the product image
   element.appendChild(createElementWithClass('div','col-md-2'));
-  element.lastChild.appendChild(createElementWithClass('img','shop-image'));
+  element.lastChild.appendChild(createElementWithClass('img','img-responsive'));
   element.lastChild.lastChild.setAttribute('src',obj.image);
   //Adding product title
   element.appendChild(createElementWithClass('div','col-md-6'));
-  element.lastChild.appendChild(createElementWithClass('h3','shop-title'));
+  element.lastChild.appendChild(createElementWithClass('h4','shop-title'));
   element.lastChild.lastChild.innerText = obj.title;
   //Adding the delete from cart button
   element.lastChild.appendChild(createElementWithClass('button','btn btn-info delete'));
@@ -210,12 +214,11 @@ function createShoppingElement(obj, qty) {
   element.lastChild.lastChild.innerText = 'Delete';
   //Adding item price
   element.appendChild(createElementWithClass('div','col-md-2'));
-  element.lastChild.appendChild(createElementWithClass('p','shop-price'));
+  element.lastChild.appendChild(createElementWithClass('h4','text-danger shop-price'));
   element.lastChild.lastChild.innerText = '$' + obj.price.toFixed(2);
   //Creating quantity dropdown
   element.appendChild(createElementWithClass('div','col-md-2'));
-  element.lastChild.innerText = 'Qty:';
-  element.lastChild.appendChild(createElementWithClass('select','form-control shop-qty'));
+  element.lastChild.appendChild(createElementWithClass('select','form-control form-inline shop-qty'));
   for (var i = 1; i <= 10; i++) {
     element.lastChild.lastChild.appendChild(document.createElement('option'));
     element.lastChild.lastChild.lastChild.innerText = i;
@@ -270,11 +273,15 @@ document.getElementById('shop-items').addEventListener("change", function(event)
 })
 //Event listener for the checkout button creating checkout page
 document.getElementById('checkout').addEventListener("click", function(event) {
+  if (cart.length === 0) {
+    alert('Your cart is empty. Please add some items first.');
+    return;
+  }
   for (var i = 0; i < cart.length; i++) {
     var element = createElementWithClass('div','row');
     //Adding image to the review box
     element.appendChild(createElementWithClass('div','col-md-2'));
-    element.lastChild.appendChild(createElementWithClass('img','review-image'));
+    element.lastChild.appendChild(createElementWithClass('img','img-responsive'));
     element.lastChild.lastChild.setAttribute('src',cart[i].object.image);
     //Adding item title
     element.appendChild(createElementWithClass('div','col-md-10'));
@@ -284,17 +291,19 @@ document.getElementById('checkout').addEventListener("click", function(event) {
     element.lastChild.appendChild(document.createElement('h5'));
     element.lastChild.lastChild.innerText = "$" + cart[i].object.price.toFixed(2);
     //Adding quantity dropdown
-    element.lastChild.appendChild(createElementWithClass('select','form-control review-item-qty'));
+    element.lastChild.appendChild(createElementWithClass('form','form-inline'));
+    element.lastChild.lastChild.appendChild(createElementWithClass('div','form-group'));
+    element.lastChild.lastChild.lastChild.appendChild(createElementWithClass('select','form-control review-item-qty'));
     for (var j = 1; j <= 10; j++) {
-      element.lastChild.lastChild.appendChild(document.createElement('option'));
-      element.lastChild.lastChild.lastChild.innerText = j;
+      element.lastChild.lastChild.lastChild.lastChild.appendChild(document.createElement('option'));
+      element.lastChild.lastChild.lastChild.lastChild.lastChild.innerText = j;
       if (j === cart[i].quantity) {
-        element.lastChild.lastChild.lastChild.setAttribute('selected',true);
+        element.lastChild.lastChild.lastChild.lastChild.lastChild.setAttribute('selected',true);
       }
     }
-    element.lastChild.appendChild(createElementWithClass('button','btn btn-info checkout-delete'));
-    element.lastChild.lastChild.innerText = 'Delete';
-    element.lastChild.lastChild.setAttribute('type','button');
+    element.lastChild.lastChild.lastChild.appendChild(createElementWithClass('button','btn btn-info checkout-delete'));
+    element.lastChild.lastChild.lastChild.lastChild.innerText = 'Delete';
+    element.lastChild.lastChild.lastChild.lastChild.setAttribute('type','button');
     document.getElementById('review-items').appendChild(element);
   }
   today.setDate(today.getDate() + 7);
@@ -390,7 +399,7 @@ document.getElementsByClassName('payment-btn')[0].addEventListener("click", func
 function warningNote(note, idLabel) {
   var parentElement = document.getElementById(idLabel).parentElement;
   var nextElement = document.getElementById(idLabel).nextSibling;
-  var element = document.createElement('p');
+  var element = createElementWithClass('p','text-danger');
   element.id = 'warning-note';
   element.appendChild(document.createTextNode(note));
   parentElement.insertBefore(element, nextElement);

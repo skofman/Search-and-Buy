@@ -3,18 +3,21 @@
 <head>
   <title>Search and Buy</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="style.css">
 
 </head>
 <body>
   <!-- Main bar -->
-  <div class="container-fluid main-bar show">
-    <div class="row">
-      <div class="col-md-2 col-sm-3 col-xs-4">
-        <a href="#"><img class="logo" src="images/logo.png"></a>
+  <nav class="navbar navbar-default navbar-fixed-top main-bar show">
+    <div class="container-fluid">
+      <div class="navabar-header">
+        <a class="navbar-brand" href="#">
+          <i class="fa fa-search-plus fa-lg"></i><span> </span><i class="fa fa-arrow-right fa-lg"></i><span> </span><i class="fa fa-credit-card fa-lg"></i>
+        </a>
       </div>
-      <div class="col-md-8 col-sm-6 col-xs-4">
-        <div class="input-group search-bar">
+      <form class="navbar-form navbar-left">
+        <div class="form-group input-group search-bar">
           <div class="input-group-btn">
             <button type="button" class="btn btn-default dropdown-toggle" id="category" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value="All">All <span class="caret"></span></button>
             <ul class="dropdown-menu cat-menu">
@@ -29,14 +32,9 @@
             <button id="search-btn" class="btn btn-default" type="button"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
           </span>
         </div>
-      </div>
-      <div class="cart col-md-2 col-sm-3 col-xs-4">
-        <img id="cart-image" src="images/cart-img.png" height="45" width="45">
-        <span id="cart-title">Cart</span>
-        <span id="cart-items">0</span>
-      </div>
-    </div>
-  </div>
+      </form>
+      <button type="button" class="btn btn-default navbar-btn pull-right cart-go"><i class="fa fa-shopping-cart fa-lg"></i><span id="cart-items" class="text-danger"> (0)</span></button>
+  </nav>
   <!-- Main initial screen -->
   <div class="container main-screen show">
     <!-- First row of items -->
@@ -45,7 +43,7 @@
         <div class="panel panel-default">
           <div class="panel-heading main-title"></div>
           <div class="panel-body">
-            <img class="panel-image main-image center-block" src="">
+            <img class="img-responsive panel-image center-block" src="">
           </div>
         </div>
       </div>
@@ -53,7 +51,7 @@
         <div class="panel panel-default">
           <div class="panel-heading main-title"></div>
           <div class="panel-body">
-            <img class="panel-image main-image center-block" src="">
+            <img class="img-responsive panel-image center-block" src="">
           </div>
         </div>
       </div>
@@ -61,7 +59,7 @@
         <div class="panel panel-default">
           <div class="panel-heading main-title"></div>
           <div class="panel-body">
-            <img class="panel-image main-image center-block" src="">
+            <img class="img-responsive panel-image center-block" src="">
           </div>
         </div>
       </div>
@@ -72,7 +70,7 @@
         <div class="panel panel-default">
           <div class="panel-heading main-title"></div>
           <div class="panel-body">
-            <img class="panel-image main-image center-block" src="">
+            <img class="img-responsive panel-image center-block" src="">
           </div>
         </div>
       </div>
@@ -80,7 +78,7 @@
         <div class="panel panel-default">
           <div class="panel-heading main-title"></div>
           <div class="panel-body">
-            <img class="panel-image main-image center-block" src="">
+            <img class="img-responsive panel-image center-block" src="">
           </div>
         </div>
       </div>
@@ -88,7 +86,7 @@
         <div class="panel panel-default">
           <div class="panel-heading main-title"></div>
           <div class="panel-body">
-            <img class="panel-image main-image center-block" src="">
+            <img class="img-responsive panel-image center-block" src="">
           </div>
         </div>
       </div>
@@ -99,7 +97,7 @@
         <div class="panel panel-default">
           <div class="panel-heading main-title"></div>
           <div class="panel-body">
-            <img class="panel-image main-image center-block" src="">
+            <img class="img-responsive panel-image center-block" src="">
           </div>
         </div>
       </div>
@@ -107,7 +105,7 @@
         <div class="panel panel-default">
           <div class="panel-heading main-title"></div>
           <div class="panel-body">
-            <img class="panel-image main-image center-block" src="">
+            <img class="img-responsive panel-image center-block" src="">
           </div>
         </div>
       </div>
@@ -115,7 +113,7 @@
         <div class="panel panel-default">
           <div class="panel-heading main-title"></div>
           <div class="panel-body">
-            <img class="panel-image main-image center-block" src="">
+            <img class="img-responsive panel-image center-block" src="">
           </div>
         </div>
       </div>
@@ -152,11 +150,11 @@
     <div class="row">
       <div class="col-md-10">
         <div class="col-md-6">
-          <img id="product-image" src="images/1.jpg">
+          <img class="img-responsive" id="product-image" src="images/1.jpg">
         </div>
         <div class="col-md-6">
-          <h1 id="product-title"></h1>
-          <p class="text-danger" id="product-price"></p>
+          <h2 id="product-title"></h2>
+          <h4 class="text-danger" id="product-price"></h4>
           <ul id="features">
           </ul>
         </div>
@@ -164,20 +162,27 @@
       <div class="col-md-2">
         <div class="panel panel-default">
           <div class="panel-body product-box">
-            Qty:
-            <select class="form-control qty">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
-              <option>6</option>
-              <option>7</option>
-              <option>8</option>
-              <option>9</option>
-              <option>10</option>
-            </select>
-            <button type="button" class="btn btn-success" id="cart-box-btn">Add to Cart</button>
+            <form>
+              <div class="form-group">
+                <label class="form-inline center-block">
+                  Qty:
+                  <select class="form-control qty">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                    <option>9</option>
+                    <option>10</option>
+                  </select>
+                </label>
+                <br>
+                <button type="button" class="btn btn-success center-block" id="cart-box-btn">Add to Cart</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -192,10 +197,10 @@
             <h3>Shopping Cart</h3>
           </div>
           <div class="col-md-2">
-            <p>Price</p>
+            <h5>Price</h5>
           </div>
           <div class="col-md-2">
-            <p>Quantity</p>
+            <h5>Quantity</h5>
           </div>
       </div>
       <hr id='insert'>
@@ -203,26 +208,24 @@
       <div class="col-md-2">
         <div class="panel panel-default">
           <div class="panel-body cart-box">
-            <p id="shop-box-text"></p>
-            <button type="button" class="btn btn-success" id="checkout">Checkout</button>
+            <p id="shop-box-text" class="text-center"></p>
+            <button type="button" class="btn btn-success center-block" id="checkout">Checkout</button>
           </div>
         </div>
       </div>
     </div>
   </div>
   <!-- Checkout page -->
-  <div class="container-fluid checkout-bar hide">
-    <div class="row">
-      <div class="col-md-2 col-sm-3 col-xs-4">
-        <a href="#"><img class="logo" src="images/logo.png"></a>
+  <nav class="navbar navbar-default navbar-fixed-top checkout-bar hide">
+    <div class="container-fluid">
+      <div class="navabar-header">
+        <a class="navbar-brand" href="#">
+          <i class="fa fa-search-plus fa-lg"></i><span> </span><i class="fa fa-arrow-right fa-lg"></i><span> </span><i class="fa fa-credit-card fa-lg"></i>
+        </a>
       </div>
-      <div class="col-md-8 col-sm-6 col-xs-4">
-        <h2 id="checkout-text"></h2>
-      </div>
-      <div class="col-md-2 col-sm-3 col-xs-4">
-      </div>
+      <h2 id="checkout-text" class="text-center"></h2>
     </div>
-  </div>
+  </nav>
   <div class="container checkout-page hide">
     <div class="row">
       <div class="col-md-9">
@@ -236,8 +239,8 @@
           <div class="col-md-3">
             <!-- Address button and Modal -->
             <button type="button" class="btn btn-default" data-toggle="modal" data-target=".address-modal">Change</button>
-            <div class="modal fade address-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-              <div class="modal-dialog modal-lg">
+            <div class="modal fade address-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+              <div class="modal-dialog modal-md">
                 <div class="modal-content">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -245,27 +248,43 @@
                   </div>
                   <div class="modal-body">
                     <div class="row">
-                      <div class="col-md-3">
+                      <div class="col-md-4">
                         <h5>Full name:</h5>
+                        <br>
                         <h5>Address line 1:</h5>
+                        <br>
                         <h5>Address line 2:</h5>
+                        <br>
                         <h5>City:</h5>
+                        <br>
                         <h5>State/Province/Region:</h5>
+                        <br>
                         <h5>ZIP:</h5>
+                        <br>
                         <h5>Country:</h5>
+                        <br>
                         <h5>Phone number:</h5>
                       </div>
-                      <div class="col-md-9">
+                      <div class="col-md-8">
+                        <form>
                         <div class="form group" id="address-input">
                           <input type="text" class="form-control" id="ship-name">
+                          <br>
                           <input type="text" class="form-control" id="ship-address" placeholder="Street address, P.O. box, company name, c/o">
+                          <br>
                           <input type="text" class="form-control" id="ship-unit" placeholder="Apartment, suite, unit, building, floor, etc.">
+                          <br>
                           <input type="text" class="form-control" id="ship-city">
+                          <br>
                           <input type="text" class="form-control" id="ship-state">
-                          <input type="text" class="form-control" id="ship-zip">
+                          <br>
+                          <input type="number" class="form-control" id="ship-zip">
+                          <br>
                           <input type="text" class="form-control" id="ship-country">
-                          <input type="text" class="form-control" id="ship-phone">
+                          <br>
+                          <input type="tel" class="form-control" id="ship-phone">
                         </div>
+                      </form>
                       </div>
                     </div>
                   </div>
@@ -301,12 +320,16 @@
                     <div class="row">
                       <div class="col-md-4">
                         <h5>Card number</h5>
+                        <br>
                         <h5>Name on card</h5>
+                        <br>
                         <h5>Expiration date</h5>
                       </div>
                       <div class="col-md-8">
                         <input type="text" id="pay-card" class="form-control">
+                        <br>
                         <input type="text" id="pay-name" class="form-control">
+                        <br>
                         <div class="col-md-6">
                           <select class="form-control">
                             <option>01</option>
@@ -353,9 +376,24 @@
               <div class="col-md-8" id="review-items">
               </div>
               <div class="col-md-4">
-                <input class="input-group" type="radio" value="19.95" name="ship">$19.95 One-Day Shipping</input>
-                <input class="input-group" type="radio" value="9.95" name="ship">$9.95 Two-Day Shipping</input>
-                <input class="input-group" type="radio" value="0" name="ship" checked>FREE Standard Shipping</input>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="ship" value="19.95">
+                    $19.95 One-Day Shipping
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="ship" value="9.95">
+                    $9.95 Two-Day Shipping
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="ship" value="0" checked>
+                    FREE Standard Shipping
+                  </label>
+                </div>
               </div>
             </div>
           </div>
@@ -364,8 +402,12 @@
           <div class="panel-body">
             <div class="row">
               <div class="col-md-12">
-                <button type="button" class="btn btn-success order">Place your order</button>
-                <h5 id="order-total-bottom">Order total: $$$</h5>
+                <div class="col-md-2">
+                  <button type="button" class="btn btn-success order">Place your order</button>
+                </div>
+                <div class="col-md-10">
+                  <h4 id="order-total-bottom" class="pull-left text-danger"></h4>
+                </div>
               </div>
             </div>
           </div>
@@ -376,7 +418,7 @@
           <div class="panel-body">
             <button type="button" class="btn btn-success center-block order">Place your order</button>
             <hr>
-            <h5>Order Summary</h5>
+            <h4>Order Summary</h5>
             <div class="row">
               <div class="col-md-8">
                 <p id="checkout-box-items"></p>
@@ -395,11 +437,11 @@
             </div>
             <hr>
             <div class="row">
-              <div class="col-md-8">
-                <h5>Order total</h5>
+              <div class="col-md-7">
+                <h4 class="text-danger">Order total</h5>
               </div>
-              <div class="col-md-4">
-                <h5 id="order-total"></h5>
+              <div class="col-md-5">
+                <h4 class="pull-right text-danger" id="order-total"></h5>
               </div>
             </div>
           </div>
