@@ -13,7 +13,6 @@ document.getElementsByClassName('cat-menu')[0].addEventListener("click", functio
   var text = category + " ";
   var element = document.createTextNode(text);
   document.getElementById('category').replaceChild(element, document.getElementById('category').firstChild);
-  console.log(document.getElementById('category'));
 });
 //Populate front page with random items.
 var titleElements = document.getElementsByClassName('main-title');
@@ -62,7 +61,12 @@ function displayResults(object) {
   document.getElementsByClassName('results-items')[0].appendChild(document.createElement('hr'));
 }
 //Creating grid display element
-
+//Event listener for the 'Enter' key in the search field
+document.getElementById('search-field').addEventListener("keypress", function(event) {
+  if (event.charCode === 13) {
+    document.getElementById('search-btn').click();
+  }
+});
 //Creating the search feature and refreshing the screen to show the results.
 document.getElementById('search-btn').addEventListener("click", function() {
   clearOldResults();
@@ -165,6 +169,10 @@ document.getElementsByClassName('product-box')[0].addEventListener("click", func
 })
 //Event listener and creation of the shopping cart page
 document.getElementsByClassName('cart')[0].addEventListener("click", function() {
+  if (cart.length === 0) {
+    alert('Your cart is empty. Please add some items first.');
+    return;
+  }
   while (document.getElementById('insert').nextSibling) {
     document.getElementById('insert').nextSibling.remove();
   }
@@ -252,7 +260,7 @@ document.getElementById('shop-items').addEventListener("change", function(event)
         totalItems += (newQty - cart[i].quantity);
         totalPrice += (newQty - cart[i].quantity) * cart[i].object.price;
         cart[i].quantity = newQty;
-        document.getElementById('subtotal').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice.fixed(2);
+        document.getElementById('subtotal').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice.toFixed(2);
         document.getElementById('shop-box-text').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice.toFixed(2);
         document.getElementById('cart-items').innerText = totalItems;
         return;
