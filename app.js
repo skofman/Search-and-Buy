@@ -6,6 +6,7 @@ var totalItems = 0;
 var shippingPrice = 0;
 var taxRate = 0.08;
 var cart = [];
+var today = new Date();
 //Creating a category selector.
 document.getElementsByClassName('cat-menu')[0].addEventListener("click", function(event) {
   category = event.target.innerText;
@@ -59,8 +60,7 @@ function displayResults(object) {
   rowElement.lastChild.lastChild.setAttribute('data-serial',object.serial);
   document.getElementsByClassName('results-items')[0].appendChild(rowElement);
   document.getElementsByClassName('results-items')[0].appendChild(document.createElement('hr'));
-};
-
+}
 //Creating grid display element
 
 //Creating the search feature and refreshing the screen to show the results.
@@ -289,6 +289,7 @@ document.getElementById('checkout').addEventListener("click", function(event) {
     element.lastChild.lastChild.setAttribute('type','button');
     document.getElementById('review-items').appendChild(element);
   }
+  today.setDate(today.getDate() + 7);
   updateCheckoutPage();
   showElements('checkout-bar','checkout-page');
 })
@@ -402,6 +403,18 @@ document.getElementById('checkout-box').addEventListener("change", function(even
   }
   if (event.target.name === "ship") {
     shippingPrice = Number(event.target.value);
+    today = new Date();
+    switch(shippingPrice) {
+      case 0:
+        today.setDate(today.getDate() + 7);
+        break;
+      case 9.95:
+        today.setDate(today.getDate() + 2);
+        break;
+      case 19.95:
+        today.setDate(today.getDate() + 1);
+        break;
+    }
     updateCheckoutPage();
   }
 });
@@ -432,4 +445,35 @@ function updateCheckoutPage() {
   document.getElementById('tax').innerText = "$" + (totalPrice * taxRate).toFixed(2);
   document.getElementById('order-total').innerText = "$" + (totalPrice * (1 + taxRate) + shippingPrice).toFixed(2);
   document.getElementById('order-total-bottom').innerText = "Order total: $" + (totalPrice * (1 + taxRate) + shippingPrice).toFixed(2);
+  var date = monthName(today.getMonth()) + ' ' + today.getDate() + ', ' + today.getFullYear();
+  document.getElementById('delivery-text').innerText = 'Estimated delivery: ' + date;
+}
+//function to retrieve month name
+function monthName(month) {
+  switch(month) {
+    case 0:
+      return 'January';
+    case 1:
+      return 'February';
+    case 2:
+      return 'March';
+    case 3:
+      return 'April';
+    case 4:
+      return 'May';
+    case 5:
+      return 'June';
+    case 6:
+      return 'July';
+    case 7:
+      return 'August';
+    case 8:
+      return 'September';
+    case 9:
+      return 'October';
+    case 10:
+      return 'November';
+    case 11:
+      return 'December';
+  }
 }
