@@ -26,20 +26,20 @@ for (var i = 0; i < 9; i++) {
     randomItems.push(randomItem);
     titleElements[i].innerHTML = items[randomItem].title;
     imageElements[i].setAttribute("src", items[randomItem].image);
-    titleElements[i].setAttribute('data-serial',items[randomItem].serial);
-    imageElements[i].setAttribute('data-serial',items[randomItem].serial);
   }
   else {
     i--;
   }
 }
 //Creating row display element
-function displayResultsRow() {
+function displayResultsRow(str) {
+  var text = document.createTextNode(str);
+  document.getElementById('results-text').appendChild(text);
   for (var i = 0; i < foundItems.length; i++) {
     var rowElement = createElementWithClass('div','row');
     //Adding item image
     rowElement.appendChild(createElementWithClass('div','col-md-4'));
-    rowElement.lastChild.appendChild(createElementWithClass('img','img-responsive enter-block'));
+    rowElement.lastChild.appendChild(createElementWithClass('img','img-responsive item-image center-block'));
     rowElement.lastChild.lastChild.setAttribute('src',items[foundItems[i]].image);
     rowElement.appendChild(createElementWithClass('div','col-md-8'));
     //Adding item title
@@ -61,31 +61,38 @@ function displayResultsRow() {
   }
 }
 //Creating grid display element
-function displayResultsGrid() {
-  for (var i = 0; i < foundItems.length; i++) {
-    if (i % 3 === 0) {
-      var rowElement = createElementWithClass('div','row');
-    }
-    var colElement = createElementWithClass('div','col-md-4');
-    colElement.appendChild(createElementWithClass('div','panel panel-default'));
-    colElement.lastChild.appendChild(createElementWithClass('div','panel-heading results'));
-    colElement.lastChild.lastChild.appendChild(createElementWithClass('h4','results-title'));
-    colElement.lastChild.lastChild.lastChild.appendChild(document.createTextNode(items[foundItems[i]].title));
+function displayResultsGrid(str) {
+  var text = document.createTextNode(str);
+  document.getElementById('results-text').appendChild(text);
+  var item = 0;
+  for (var i = 0; i < Math.ceil(foundItems.length / 3); i++) {
+    var rowElement = createElementWithClass('div','row');
+    for (var j = 0; j < 3; j++) {
+      if (item < foundItems.length) {
+        var colElement = createElementWithClass('div','col-md-4');
+        colElement.appendChild(createElementWithClass('div','panel panel-default'));
+        colElement.lastChild.appendChild(createElementWithClass('div','panel-heading results'));
+        colElement.lastChild.lastChild.appendChild(createElementWithClass('h5','results-title'));
+        colElement.lastChild.lastChild.lastChild.appendChild(document.createTextNode(items[foundItems[item]].title));
 
-    colElement.lastChild.appendChild(createElementWithClass('div','panel-body'));
-    //Adding image
-    colElement.lastChild.lastChild.appendChild(createElementWithClass('img','img-responsive panel-image center-block'));
-    colElement.lastChild.lastChild.lastChild.setAttribute('src', items[foundItems[i]].image);
-    //Adding price
-    colElement.lastChild.lastChild.appendChild(createElementWithClass('h4','text-danger'));
-    colElement.lastChild.lastChild.lastChild.appendChild(document.createTextNode('$' + items[foundItems[i]].price.toFixed(2)));
-    //Adding cart button
-    colElement.lastChild.lastChild.appendChild(createElementWithClass('button','btn btn-success cart-btn'));
-    colElement.lastChild.lastChild.lastChild.appendChild(createElementWithClass('i','fa fa-cart-plus fa-lg'));
-    var cartText = document.createTextNode('  Add to Cart');
-    colElement.lastChild.lastChild.lastChild.lastChild.appendChild(cartText);
-    colElement.lastChild.lastChild.setAttribute('type','button');
-    rowElement.appendChild(colElement);
+        colElement.lastChild.appendChild(createElementWithClass('div','panel-body'));
+        //Adding image
+        colElement.lastChild.lastChild.appendChild(createElementWithClass('img','img-responsive panel-image center-block'));
+        colElement.lastChild.lastChild.lastChild.setAttribute('src', items[foundItems[item]].image);
+        //Adding price
+        colElement.lastChild.lastChild.appendChild(createElementWithClass('h4','text-danger'));
+        colElement.lastChild.lastChild.lastChild.appendChild(document.createTextNode('$' + items[foundItems[item]].price.toFixed(2)));
+        //Adding cart button
+        colElement.lastChild.lastChild.appendChild(createElementWithClass('button','btn btn-success cart-btn'));
+        colElement.lastChild.lastChild.lastChild.appendChild(createElementWithClass('i','fa fa-cart-plus fa-lg'));
+        var cartText = document.createTextNode('  Add to Cart');
+        colElement.lastChild.lastChild.lastChild.appendChild(cartText);
+        colElement.lastChild.lastChild.setAttribute('type','button');
+        rowElement.appendChild(colElement);
+        item++;
+      }
+    }
+    document.getElementsByClassName('results-items')[0].appendChild(rowElement);
   }
 }
 //Event listener for the 'Enter' key in the search field
@@ -104,9 +111,8 @@ document.getElementById('search-btn').addEventListener("click", function() {
       foundItems.push(i);
     }
   }
-  var text = document.createTextNode(foundItems.length + ' results for "' + searchValue + '"');
-  document.getElementById('results-text').appendChild(text);
-  displayResultsRow();
+  var foundString = foundItems.length + ' results for "' + searchValue + '"';
+  displayResultsRow(foundString);
   //Show results page and hide all other pages
   showElements('main-bar','results-summary','results-items');
 });
@@ -126,20 +132,53 @@ function clearOldResults() {
   }
 }
 //Create event listener that shows the product page for selected product
-document.getElementById('found-item').addEventListener("click", productPage);
-//Function to create the product page
-function productPage(event) {
-  //Finding the selected product
+document.getElementById('found-item').addEventListener("click", function(event) {
   if (event.target.className.split(' ').indexOf('cart-btn') != -1) {
     var itemList = document.querySelectorAll('.cart-btn');
     for (var i = 0; i < itemList.length; i++) {
       if (event.target === itemList[i]) {
-        addToCart(items[foundItems[i]], 1);
+        addToCart(foundItems[i], 1);
         return;
       }
     }
   }
-  /*
+  var classList = event.target.className.split(' ');
+  //checking if an image was clicked
+  if (classList.indexOf('item-image') != -1) {
+    var itemList = document.querySelectorAll('.item-image');
+    for (var j = 0; j < itemList.length; j++) {
+      if (event.target == itemList[j]) {
+        document.getElementsByClassName('product-page')[0].setAttribute('data-item',foundItems[j]);
+        productPage(items[foundItems[j]]);
+        return;
+      }
+    }
+  }
+  //checking if the price was clicked
+  if (classList.indexOf('item-price') != -1) {
+    var itemList = document.querySelectorAll('.item-price');
+    for (var j = 0; j < itemList.length; j++) {
+      if (event.target == itemList[j]) {
+        document.getElementsByClassName('product-page')[0].setAttribute('data-item',foundItems[j]);
+        productPage(items[foundItems[j]]);
+        return;
+      }
+    }
+  }
+  //checking if the title was clicked
+  if (classList.indexOf('item-title') != -1) {
+    var itemList = document.querySelectorAll('.item-title');
+    for (var j = 0; j < itemList.length; j++) {
+      if (event.target == itemList[j]) {
+        document.getElementsByClassName('product-page')[0].setAttribute('data-item',foundItems[j]);
+        productPage(items[foundItems[j]]);
+        return;
+      }
+    }
+  }
+});
+//Function to create the product page
+function productPage(object) {
   //Clearing previous product information
   if (document.getElementById('product-title').lastChild) {
     document.getElementById('product-title').lastChild.remove();
@@ -166,33 +205,25 @@ function productPage(event) {
     listElement.appendChild(listTextNode);
     document.getElementById('features').appendChild(listElement);
   }
-  document.getElementById('cart-box-btn').setAttribute('data-serial',object.serial);
-  showElements('main-bar','product-page'); */
+  showElements('main-bar','product-page');
 }
 //Add to cart function
-function addToCart(obj, qty) {
+function addToCart(item, qty) {
   var currentQtyString = document.getElementById('cart-items').innerText.trim();
   var currentQty = Number(currentQtyString.slice(1, currentQtyString.length - 1));
   document.getElementById('cart-items').innerText = " (" + (currentQty + qty) + ")";
   for (var i = 0; i < cart.length; i++) {
-    if (cart[i].object.serial === obj.serial) {
+    if (cart[i].item === item) {
       cart[i].quantity += qty;
       return;
     }
   }
-  cart.push({object: obj, quantity: qty});
+  cart.push({item: item, quantity: qty});
 }
 //Event listener for add to cart button on the product page
-document.getElementsByClassName('product-box')[0].addEventListener("click", function(el) {
-  for (var i = 0; i < items.length; i++) {
-    if (el.target.getAttribute('data-serial') === items[i].serial) {
-      var object = items[i];
-      break;
-    }
-  }
-  if (el.target.id === "cart-box-btn") {
-    addToCart(object, Number(document.getElementsByClassName('qty')[0].value));
-  }
+document.getElementById('cart-box-btn').addEventListener("click", function(event) {
+  var item = Number(document.getElementsByClassName('product-page')[0].getAttribute('data-item'));
+  addToCart(item, Number(document.getElementsByClassName('qty')[0].value));
 })
 //Event listener and creation of the shopping cart page
 document.getElementsByClassName('cart-go')[0].addEventListener("click", function() {
@@ -208,8 +239,8 @@ document.getElementsByClassName('cart-go')[0].addEventListener("click", function
   totalPrice = 0;
   for (var i = 0; i < cart.length; i++) {
     totalItems += cart[i].quantity;
-    totalPrice += cart[i].object.price * cart[i].quantity;
-    parentElement.appendChild(createShoppingElement(cart[i].object,cart[i].quantity));
+    totalPrice += items[cart[i].item].price * cart[i].quantity;
+    parentElement.appendChild(createShoppingElement(items[cart[i].item],cart[i].quantity));
     parentElement.appendChild(document.createElement('hr'));
   }
   var subTotal = createElementWithClass('p','pull-right');
@@ -260,7 +291,7 @@ document.getElementById('shop-items').addEventListener("click", function(event) 
     for (var i = 0; i < length; i++) {
       if (event.target === document.getElementsByClassName('delete')[i]) {
         totalItems -= cart[i].quantity;
-        totalPrice -= cart[i].object.price * cart[i].quantity;
+        totalPrice -= items[cart[i].item].price * cart[i].quantity;
         document.getElementById('subtotal').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice.toFixed(2);
         document.getElementById('shop-box-text').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice.toFixed(2);
         document.getElementById('cart-items').innerText = " (" + totalItems + ")";
@@ -286,7 +317,7 @@ document.getElementById('shop-items').addEventListener("change", function(event)
       if (event.target === document.getElementsByClassName('shop-qty')[i]) {
         var newQty = Number(document.getElementsByClassName('shop-qty')[i].value);
         totalItems += (newQty - cart[i].quantity);
-        totalPrice += (newQty - cart[i].quantity) * cart[i].object.price;
+        totalPrice += (newQty - cart[i].quantity) * items[cart[i].item].price;
         cart[i].quantity = newQty;
         document.getElementById('subtotal').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice.toFixed(2);
         document.getElementById('shop-box-text').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice.toFixed(2);
@@ -307,14 +338,14 @@ document.getElementById('checkout').addEventListener("click", function(event) {
     //Adding image to the review box
     element.appendChild(createElementWithClass('div','col-md-2'));
     element.lastChild.appendChild(createElementWithClass('img','img-responsive'));
-    element.lastChild.lastChild.setAttribute('src',cart[i].object.image);
+    element.lastChild.lastChild.setAttribute('src',items[cart[i].item].image);
     //Adding item title
     element.appendChild(createElementWithClass('div','col-md-10'));
     element.lastChild.appendChild(document.createElement('h5'));
-    element.lastChild.lastChild.innerText = cart[i].object.title;
+    element.lastChild.lastChild.innerText = items[cart[i].item].title;
     //Adding item price
     element.lastChild.appendChild(createElementWithClass('h5','text-danger'));
-    element.lastChild.lastChild.innerText = "$" + cart[i].object.price.toFixed(2);
+    element.lastChild.lastChild.innerText = "$" + items[cart[i].item].price.toFixed(2);
     //Adding quantity dropdown
     element.lastChild.appendChild(createElementWithClass('form','form-inline'));
     element.lastChild.lastChild.appendChild(createElementWithClass('div','form-group'));
@@ -439,7 +470,7 @@ document.getElementById('checkout-box').addEventListener("change", function(even
       if (event.target === document.getElementsByClassName('review-item-qty')[i]) {
         var newQty = Number(document.getElementsByClassName('review-item-qty')[i].value);
         totalItems += (newQty - cart[i].quantity);
-        totalPrice += (newQty - cart[i].quantity) * cart[i].object.price;
+        totalPrice += (newQty - cart[i].quantity) * items[cart[i].item].price;
         cart[i].quantity = newQty;
         updateCheckoutPage();
       }
@@ -469,7 +500,7 @@ document.getElementById('checkout-box').addEventListener("click", function(event
     for (var i = 0; i < length; i++) {
       if (event.target === document.getElementsByClassName('checkout-delete')[i]) {
         totalItems -= cart[i].quantity;
-        totalPrice -= cart[i].object.price * cart[i].quantity;
+        totalPrice -= items[cart[i].item].price * cart[i].quantity;
         updateCheckoutPage();
         cart.splice(i, 1);
         var parent = document.getElementsByClassName('checkout-delete')[i].parentElement.parentElement.parentElement.parentElement;
@@ -521,10 +552,22 @@ function monthName(month) {
       return 'December';
   }
 }
-//Event listener to results view
+//Event listeners to results view
 document.getElementById('grid-view').addEventListener("click", function(event) {
   if (document.getElementById('grid-view').className.split(' ').indexOf('btn-default') != -1) {
+    document.getElementById('grid-view').className = 'btn btn-primary';
+    document.getElementById('row-view').className = 'btn btn-default';
+    var str = document.getElementById('results-text').innerText;
     clearOldResults();
-    displayResultsGrid();
+    displayResultsGrid(str);
+  }
+});
+document.getElementById('row-view').addEventListener("click", function(event) {
+  if (document.getElementById('row-view').className.split(' ').indexOf('btn-default') != -1) {
+    document.getElementById('row-view').className = 'btn btn-primary';
+    document.getElementById('grid-view').className = 'btn btn-default';
+    var str = document.getElementById('results-text').innerText;
+    clearOldResults();
+    displayResultsRow(str);
   }
 });
