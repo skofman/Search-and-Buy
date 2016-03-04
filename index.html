@@ -124,8 +124,14 @@
     <div class="panel panel-default">
       <div class="panel-body">
         <div class="row">
-          <div class="col-md-12">
-            <div id="results-text"></div>
+          <div class="col-md-6">
+            <h4 id="results-text"></h4>
+          </div>
+          <div class="col-md-6">
+            <div class="results-view-type pull-right">
+              <button type="button" class="btn btn-primary" id="row-view"><span class="glyphicon glyphicon-align-justify" aria-hidden="false"></span></button>
+              <button type="button" class="btn btn-default" id="grid-view"><span class="glyphicon glyphicon-th" aria-hidden="false"></span></button>
+            </div>
             <div class="btn-group results-sort pull-right">
               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Relevance <span class="caret"></span>
@@ -135,8 +141,6 @@
                 <li><a href="#">Price: Low to High</a></li>
                 <li><a href="#">Price: High to Low</a></li>
               </ul>
-              <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></button>
-              <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-th" aria-hidden="true"></span></button>
             </div>
           </div>
         </div>

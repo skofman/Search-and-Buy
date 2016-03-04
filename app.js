@@ -7,6 +7,7 @@ var shippingPrice = 0;
 var taxRate = 0.08;
 var cart = [];
 var today = new Date();
+foundItems = [];
 //Creating a category selector.
 document.getElementsByClassName('cat-menu')[0].addEventListener("click", function(event) {
   category = event.target.innerText;
@@ -33,35 +34,60 @@ for (var i = 0; i < 9; i++) {
   }
 }
 //Creating row display element
-function displayResults(object) {
-  var rowElement = createElementWithClass('div','row');
-  //Adding item image
-  rowElement.appendChild(createElementWithClass('div','col-md-4'));
-  rowElement.lastChild.appendChild(createElementWithClass('img','img-responsive enter-block'));
-  rowElement.lastChild.lastChild.setAttribute('src',object.image);
-  rowElement.lastChild.lastChild.setAttribute('data-serial',object.serial);
-  rowElement.appendChild(createElementWithClass('div','col-md-8'));
-  //Adding item title
-  rowElement.lastChild.appendChild(createElementWithClass('h3','item-title'));
-  var text = document.createTextNode(object.title);
-  rowElement.lastChild.lastChild.appendChild(text);
-  rowElement.lastChild.lastChild.setAttribute('data-serial',object.serial);
-  //Adding item price
-  rowElement.lastChild.appendChild(createElementWithClass('h4','item-price text-danger'));
-  var price = document.createTextNode('$' + object.price.toFixed(2));
-  rowElement.lastChild.lastChild.appendChild(price);
-  rowElement.lastChild.lastChild.setAttribute('data-serial',object.serial);
-  //Adding "Add to Cart" button
-  rowElement.lastChild.appendChild(createElementWithClass('button','btn btn-success cart-btn'));
-  rowElement.lastChild.lastChild.appendChild(createElementWithClass('i','fa fa-cart-plus fa-lg'));
-  var cartText = document.createTextNode('  Add to Cart');
-  rowElement.lastChild.lastChild.appendChild(cartText);
-  rowElement.lastChild.lastChild.setAttribute('type','button');
-  rowElement.lastChild.lastChild.setAttribute('data-serial',object.serial);
-  document.getElementsByClassName('results-items')[0].appendChild(rowElement);
-  document.getElementsByClassName('results-items')[0].appendChild(document.createElement('hr'));
+function displayResultsRow() {
+  for (var i = 0; i < foundItems.length; i++) {
+    var rowElement = createElementWithClass('div','row');
+    //Adding item image
+    rowElement.appendChild(createElementWithClass('div','col-md-4'));
+    rowElement.lastChild.appendChild(createElementWithClass('img','img-responsive enter-block'));
+    rowElement.lastChild.lastChild.setAttribute('src',items[foundItems[i]].image);
+    rowElement.appendChild(createElementWithClass('div','col-md-8'));
+    //Adding item title
+    rowElement.lastChild.appendChild(createElementWithClass('h3','item-title'));
+    var text = document.createTextNode(items[foundItems[i]].title);
+    rowElement.lastChild.lastChild.appendChild(text);
+    //Adding item price
+    rowElement.lastChild.appendChild(createElementWithClass('h4','item-price text-danger'));
+    var price = document.createTextNode('$' + items[foundItems[i]].price.toFixed(2));
+    rowElement.lastChild.lastChild.appendChild(price);
+    //Adding "Add to Cart" button
+    rowElement.lastChild.appendChild(createElementWithClass('button','btn btn-success cart-btn'));
+    rowElement.lastChild.lastChild.appendChild(createElementWithClass('i','fa fa-cart-plus fa-lg'));
+    var cartText = document.createTextNode('  Add to Cart');
+    rowElement.lastChild.lastChild.appendChild(cartText);
+    rowElement.lastChild.lastChild.setAttribute('type','button');
+    document.getElementsByClassName('results-items')[0].appendChild(rowElement);
+    document.getElementsByClassName('results-items')[0].appendChild(document.createElement('hr'));
+  }
 }
 //Creating grid display element
+function displayResultsGrid() {
+  for (var i = 0; i < foundItems.length; i++) {
+    if (i % 3 === 0) {
+      var rowElement = createElementWithClass('div','row');
+    }
+    var colElement = createElementWithClass('div','col-md-4');
+    colElement.appendChild(createElementWithClass('div','panel panel-default'));
+    colElement.lastChild.appendChild(createElementWithClass('div','panel-heading results'));
+    colElement.lastChild.lastChild.appendChild(createElementWithClass('h4','results-title'));
+    colElement.lastChild.lastChild.lastChild.appendChild(document.createTextNode(items[foundItems[i]].title));
+
+    colElement.lastChild.appendChild(createElementWithClass('div','panel-body'));
+    //Adding image
+    colElement.lastChild.lastChild.appendChild(createElementWithClass('img','img-responsive panel-image center-block'));
+    colElement.lastChild.lastChild.lastChild.setAttribute('src', items[foundItems[i]].image);
+    //Adding price
+    colElement.lastChild.lastChild.appendChild(createElementWithClass('h4','text-danger'));
+    colElement.lastChild.lastChild.lastChild.appendChild(document.createTextNode('$' + items[foundItems[i]].price.toFixed(2)));
+    //Adding cart button
+    colElement.lastChild.lastChild.appendChild(createElementWithClass('button','btn btn-success cart-btn'));
+    colElement.lastChild.lastChild.lastChild.appendChild(createElementWithClass('i','fa fa-cart-plus fa-lg'));
+    var cartText = document.createTextNode('  Add to Cart');
+    colElement.lastChild.lastChild.lastChild.lastChild.appendChild(cartText);
+    colElement.lastChild.lastChild.setAttribute('type','button');
+    rowElement.appendChild(colElement);
+  }
+}
 //Event listener for the 'Enter' key in the search field
 document.getElementById('search-field').addEventListener("keypress", function(event) {
   if (event.charCode === 13) {
@@ -71,16 +97,16 @@ document.getElementById('search-field').addEventListener("keypress", function(ev
 //Creating the search feature and refreshing the screen to show the results.
 document.getElementById('search-btn').addEventListener("click", function() {
   clearOldResults();
+  foundItems = [];
   var searchValue = document.getElementById('search-field').value.toLowerCase();
-  var counter = 0;
   for (var i = 0; i < items.length; i++) {
     if (items[i].title.toLowerCase().match(searchValue) && (category === "All" || items[i].category === category)) {
-      displayResults(items[i]);
-      counter++;
+      foundItems.push(i);
     }
   }
-  var text = document.createTextNode(counter + ' results for "' + searchValue + '"');
+  var text = document.createTextNode(foundItems.length + ' results for "' + searchValue + '"');
   document.getElementById('results-text').appendChild(text);
+  displayResultsRow();
   //Show results page and hide all other pages
   showElements('main-bar','results-summary','results-items');
 });
@@ -102,22 +128,18 @@ function clearOldResults() {
 //Create event listener that shows the product page for selected product
 document.getElementById('found-item').addEventListener("click", productPage);
 //Function to create the product page
-function productPage(el) {
+function productPage(event) {
   //Finding the selected product
-  for (var i = 0; i < items.length; i++) {
-    if (el.target.getAttribute('data-serial') === items[i].serial) {
-      var object = items[i];
-      break;
+  if (event.target.className.split(' ').indexOf('cart-btn') != -1) {
+    var itemList = document.querySelectorAll('.cart-btn');
+    for (var i = 0; i < itemList.length; i++) {
+      if (event.target === itemList[i]) {
+        addToCart(items[foundItems[i]], 1);
+        return;
+      }
     }
   }
-  if (!object) {
-    return;
-  }
-  //Checking if add to cart button was clicked
-  if (el.target.className.split(' ').indexOf('cart-btn') != -1) {
-    addToCart(object, 1);
-    return;
-  }
+  /*
   //Clearing previous product information
   if (document.getElementById('product-title').lastChild) {
     document.getElementById('product-title').lastChild.remove();
@@ -145,7 +167,7 @@ function productPage(el) {
     document.getElementById('features').appendChild(listElement);
   }
   document.getElementById('cart-box-btn').setAttribute('data-serial',object.serial);
-  showElements('main-bar','product-page');
+  showElements('main-bar','product-page'); */
 }
 //Add to cart function
 function addToCart(obj, qty) {
@@ -499,3 +521,10 @@ function monthName(month) {
       return 'December';
   }
 }
+//Event listener to results view
+document.getElementById('grid-view').addEventListener("click", function(event) {
+  if (document.getElementById('grid-view').className.split(' ').indexOf('btn-default') != -1) {
+    clearOldResults();
+    displayResultsGrid();
+  }
+});
