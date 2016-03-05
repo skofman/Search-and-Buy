@@ -46,6 +46,15 @@ function displayResultsRow(str) {
     rowElement.lastChild.appendChild(createElementWithClass('h3','item-title'));
     var text = document.createTextNode(foundItems[i].title);
     rowElement.lastChild.lastChild.appendChild(text);
+    //Adding item reviews
+    var sum = 0;
+    for (var j = 0; j < foundItems[i].reviews.length; j++) {
+      sum += foundItems[i].reviews[j].stars;
+    }
+    var rating = sum / foundItems[i].reviews.length;
+    rowElement.lastChild.appendChild(createElementWithClass('div','rating'));
+    rowElement.lastChild.lastChild.appendChild(createStars(rating));
+    rowElement.lastChild.lastChild.appendChild(document.createTextNode("  " + foundItems[i].reviews.length + " customer reviews."));
     //Adding item price
     rowElement.lastChild.appendChild(createElementWithClass('h4','item-price text-danger'));
     var price = document.createTextNode('$' + foundItems[i].price.toFixed(2));
@@ -74,11 +83,19 @@ function displayResultsGrid(str) {
         colElement.lastChild.appendChild(createElementWithClass('div','panel-heading results'));
         colElement.lastChild.lastChild.appendChild(createElementWithClass('h5','results-title'));
         colElement.lastChild.lastChild.lastChild.appendChild(document.createTextNode(foundItems[item].title));
-
         colElement.lastChild.appendChild(createElementWithClass('div','panel-body'));
         //Adding image
         colElement.lastChild.lastChild.appendChild(createElementWithClass('img','img-responsive panel-image center-block'));
         colElement.lastChild.lastChild.lastChild.setAttribute('src', foundItems[item].image);
+        //Adding ratings
+        var sum = 0;
+        for (var k = 0; k < foundItems[item].reviews.length; k++) {
+          sum += foundItems[item].reviews[k].stars;
+        }
+        var rating = sum / foundItems[item].reviews.length;
+        colElement.lastChild.lastChild.appendChild(createElementWithClass('div','rating'));
+        colElement.lastChild.lastChild.lastChild.appendChild(createStars(rating));
+        colElement.lastChild.lastChild.lastChild.appendChild(document.createTextNode("  " + foundItems[i].reviews.length + " customer reviews."));
         //Adding price
         colElement.lastChild.lastChild.appendChild(createElementWithClass('h4','text-danger'));
         colElement.lastChild.lastChild.lastChild.appendChild(document.createTextNode('$' + foundItems[item].price.toFixed(2)));
@@ -196,6 +213,14 @@ function productPage(object) {
   //Adding title to product page
   var titleTextNode = document.createTextNode(object.title);
   document.getElementById('product-title').appendChild(titleTextNode);
+  //Adding reviews
+  var review = document.getElementById('review-insert');
+  for (var i = 0; i < object.reviews.length; i++) {
+    review.appendChild(document.createElement('span'));
+    review.lastChild.appendChild(createStars(object.reviews[i].stars));
+    review.lastChild.appendChild(document.createElement('h5'));
+    review.lastChild.lastChild.appendChild(document.createTextNode(object.reviews[i].title));
+  }
   //Adding price to product page
   var priceText = 'Price: $' + object.price.toFixed(2);
   var priceTextNode = document.createTextNode(priceText);
@@ -605,3 +630,20 @@ document.getElementById('results-sort').addEventListener("click", function() {
     }
   }
 });
+
+function createStars(rating) {
+  var element = document.createElement('span');
+  var counter = 0;
+  for (var i = 0; i < Math.floor(rating); i++) {
+    element.appendChild(createElementWithClass('i','fa fa-star fa-lg'));
+    counter++;
+  }
+  if (rating % Math.floor(rating) != 0) {
+    element.appendChild(createElementWithClass('i','fa fa-star-half-o fa-lg'));
+    counter++;
+  }
+  for (var j = 0; j < 5 - counter; j++) {
+    element.appendChild(createElementWithClass('i','fa fa-star-o fa-lg'));
+  }
+  return element;
+}
