@@ -34,6 +34,11 @@
         </div>
       </form>
       <button type="button" class="btn btn-default navbar-btn pull-right cart-go"><i class="fa fa-shopping-cart fa-lg"></i><span id="cart-items" class="text-danger"> (0)</span></button>
+      <span class="pull-right">..</span>
+      <button type="button" class="btn btn-default dropdown-toggle navbar-btn pull-right" id="orders" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value="user"><i class="fa fa-user fa-lg"></i> <span class="caret"></span></button>
+      <ul class="dropdown-menu pull-right user-menu">
+        <li><a href="#">Your orders</a></li>
+      </ul>
   </nav>
   <!-- Main initial screen -->
   <div class="container main-screen show">
@@ -503,9 +508,18 @@
   <!-- Order confirmation page -->
   <div class="container order-page hide">
     <h1>Order confirmation</h1>
-    <h2>Thank you for shopping with "Search and Buy"</h2>
-    <h2>Your order will not be delivered on: since we don't really sell anything</h2>
-    <h2 id="charge-text">We did not charge $$$ to your credit card</h2>
+    <h2>Thank you for shopping with Kart</h2>
+    <h2 id="delivery-order"></h2>
+    <h2 id="charge-text"></h2>
+    <h2>You will be transfered back to the main page in 5 seconds</h2>
+  </div>
+  <!-- Past orders page -->
+  <div class="container past-orders hide">
+    <h3>Your orders</h3>
+    <br>
+    <div class="row">
+      <div class="col-md-12" id="orders-list"></div>
+    </div>
   </div>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

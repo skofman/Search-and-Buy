@@ -8,6 +8,7 @@ var taxRate = 0.08;
 var cart = [];
 var today = new Date();
 var foundItems = [];
+var orders = [];
 //Creating a category selector.
 document.getElementsByClassName('cat-menu')[0].addEventListener("click", function(event) {
   category = event.target.innerText;
@@ -391,6 +392,9 @@ document.getElementById('checkout').addEventListener("click", function(event) {
     alert('Your cart is empty. Please add some items first.');
     return;
   }
+  while(document.getElementById('review-items').lastChild) {
+    document.getElementById('review-items').lastChild.remove();
+  }
   for (var i = 0; i < cart.length; i++) {
     var element = createElementWithClass('div','row');
     //Adding image to the review box
@@ -442,8 +446,20 @@ document.getElementsByClassName('order')[0].addEventListener("click", orderPage)
 document.getElementsByClassName('order')[1].addEventListener("click", orderPage);
 
 function orderPage() {
+  orders.push([]);
+  for (var i = 0; i < cart.length; i++) {
+    orders[orders.length - 1].push(cart[i]);
+  }
+  var orderDate = new Date();
+  orders[orders.length - 1].push(monthName(orderDate.getMonth()) + ' ' + orderDate.getDate() + ', ' + orderDate.getFullYear());
+  orders[orders.length - 1].push(document.getElementById('order-total').textContent);
+  cart = [];
+  document.getElementById('cart-items').textContent = " (0)";
   document.getElementById('charge-text').innerText = "We did not charge $" + (totalPrice * (1 + taxRate) + shippingPrice).toFixed(2) + " to your credit card";
+  var date = monthName(today.getMonth()) + ' ' + today.getDate() + ', ' + today.getFullYear();
+  document.getElementById('delivery-order').textContent = "Your order will not be delivered on: " + date + " since we don't really sell anything"
   showElements('order-page');
+  window.setTimeout(showElements, 5000,'main-bar','main-screen');
 }
 //Create event listener to the address modal
 document.getElementsByClassName('address-btn')[0].addEventListener("click", function() {
@@ -745,4 +761,36 @@ document.getElementById('review-panel').addEventListener("click", function(event
       }
     }
   }
+});
+//Event listener for showing past orders
+document.getElementsByClassName("user-menu")[0].addEventListener("click", function(event) {
+  if (event.target.textContent === "Your orders") {
+    while (document.getElementById('orders-list').lastChild) {
+      document.getElementById('orders-list').lastChild.remove();
+    }
+    var element = document.getElementById('orders-list');
+    for (var i = 0; i < orders.length; i++) {
+      element.appendChild(createElementWithClass('div','panel panel-default'));
+      element.lastChild.appendChild(createElementWithClass('div','panel-heading'));
+      element.lastChild.lastChild.appendChild(document.createElement('span'));
+      element.lastChild.lastChild.lastChild.textContent = "Order placed: " + orders[i][orders[i].length - 2] + " | ";
+      element.lastChild.lastChild.appendChild(document.createElement('span'));
+      element.lastChild.lastChild.lastChild.textContent = " Order total: " + orders[i][orders[i].length - 1];
+      element.lastChild.appendChild(createElementWithClass('div','panel-body'));
+      for (var j = 0; j < orders[i].length - 2; j++) {
+        element.lastChild.lastChild.appendChild(createElementWithClass('div','row'));
+        element.lastChild.lastChild.lastChild.appendChild(createElementWithClass('div','col-md-3'));
+        element.lastChild.lastChild.lastChild.lastChild.appendChild(createElementWithClass('img','img-responsive'));
+        element.lastChild.lastChild.lastChild.lastChild.lastChild.setAttribute('src',orders[i][j].item.image);
+        element.lastChild.lastChild.lastChild.appendChild(createElementWithClass('div','col-md-9'));
+        element.lastChild.lastChild.lastChild.lastChild.appendChild(document.createElement('h4'));
+        element.lastChild.lastChild.lastChild.lastChild.lastChild.textContent = orders[i][j].item.title;
+        element.lastChild.lastChild.lastChild.lastChild.appendChild(createElementWithClass('h4','text-danger'));
+        element.lastChild.lastChild.lastChild.lastChild.lastChild.textContent = "$" + orders[i][j].item.price.toFixed(2);
+        element.lastChild.lastChild.lastChild.lastChild.appendChild(document.createElement('p'));
+        element.lastChild.lastChild.lastChild.lastChild.lastChild.textContent = "Qty: " + orders[i][j].quantity;
+      }
+    }
+  }
+  showElements('main-bar','past-orders');
 });
