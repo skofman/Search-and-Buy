@@ -162,19 +162,54 @@
             <div>
               <span id="stars"></span>
               <span id="reviewers"></span>
-              <button type="button" class="btn btn-success">Write a customer review</button>
+
             </div>
             <h4 class="text-danger" id="product-price"></h4>
             <ul id="features">
             </ul>
           </div>
-        </div>
+        </div> <!-- row -->
         <div class="row">
-          <div class="col-md-12" id="review-insert">
+          <div class="col-md-12">
             <h3>Customer Reviews</h3>
+            <button type="button" class="btn btn-success" id="write-review">Write a customer review</button>
+            <br>
+            <br>
+            <div class="panel panel-default hide" id="review-panel">
+              <div class="panel-body">
+                <div id="review-stars">
+                  <i class="fa fa-star-o fa-3x text-primary star-rate"></i>
+                  <i class="fa fa-star-o fa-3x text-primary star-rate"></i>
+                  <i class="fa fa-star-o fa-3x text-primary star-rate"></i>
+                  <i class="fa fa-star-o fa-3x text-primary star-rate"></i>
+                  <i class="fa fa-star-o fa-3x text-primary star-rate"></i>
+                </div>
+                <br>
+                <form>
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="review-name" placeholder="Your name">
+                    <br>
+                    <input type="text" class="form-control" id="review-title" placeholder="Review headline">
+                    <br>
+                    <textarea class="form-control" id="review-text" rows="5" placeholder="Write your review here"></textarea>
+                  </div>
+                </form>
+              </div>
+              <div class="panel-footer">
+                <form class="form-inline">
+                  <div class="form-group">
+                    <button type="button" class="btn btn-primary" id="review-submit">Submit</button>
+                    <button type="button" class="btn btn-default" id="review-close">Close</button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </div> <!-- row -->
+        <div class="row">
+          <div class="col-md-12" id="review-insert"></div>
+        </div> <!-- row -->
+      </div> <!-- col-md-10 -->
       <div class="col-md-2">
         <div class="panel panel-default">
           <div class="panel-body product-box">
@@ -201,9 +236,9 @@
             </form>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
+      </div> <!-- col-md-2 -->
+    </div> <!-- row -->
+  </div> <!-- container -->
   <!-- Shopping cart page -->
   <div class="container shop-page hide">
     <div class="row">

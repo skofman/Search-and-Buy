@@ -202,8 +202,17 @@ function productPage(object) {
   if (document.getElementById('product-title').lastChild) {
     document.getElementById('product-title').lastChild.remove();
   }
+  if (document.getElementById('stars').lastChild) {
+    document.getElementById('stars').lastChild.remove();
+  }
+  if (document.getElementById('reviewers').lastChild) {
+    document.getElementById('reviewers').lastChild.remove();
+  }
   if (document.getElementById('product-price').lastChild) {
     document.getElementById('product-price').lastChild.remove();
+  }
+  while (document.getElementById('review-insert').lastChild) {
+    document.getElementById('review-insert').lastChild.remove();
   }
   while (document.getElementById('features').lastChild) {
     document.getElementById('features').lastChild.remove();
@@ -214,12 +223,34 @@ function productPage(object) {
   var titleTextNode = document.createTextNode(object.title);
   document.getElementById('product-title').appendChild(titleTextNode);
   //Adding reviews
+  var sum = 0;
+  for (var k = 0; k < object.reviews.length; k++) {
+    sum += object.reviews[k].stars;
+  }
+  var rating = sum / object.reviews.length;
+  document.getElementById('stars').appendChild(createStars(rating));
+  document.getElementById('reviewers').appendChild(document.createTextNode("  " + object.reviews.length + " customer reviews"));
   var review = document.getElementById('review-insert');
   for (var i = 0; i < object.reviews.length; i++) {
-    review.appendChild(document.createElement('span'));
+    review.appendChild(document.createElement('div'));
     review.lastChild.appendChild(createStars(object.reviews[i].stars));
-    review.lastChild.appendChild(document.createElement('h5'));
-    review.lastChild.lastChild.appendChild(document.createTextNode(object.reviews[i].title));
+    review.lastChild.appendChild(document.createElement('span'));
+    review.lastChild.lastChild.appendChild(document.createElement('b'));
+    review.lastChild.lastChild.lastChild.appendChild(document.createTextNode(" " + object.reviews[i].title));
+    review.appendChild(document.createElement('div'));
+    review.lastChild.appendChild(document.createElement('span'));
+    review.lastChild.lastChild.appendChild(document.createTextNode("By "));
+    review.lastChild.lastChild.appendChild(document.createElement('b'));
+    review.lastChild.lastChild.lastChild.appendChild(document.createTextNode(object.reviews[i].user));
+    review.lastChild.lastChild.appendChild(document.createTextNode(" on " + createDateText(object.reviews[i].date)));
+    review.appendChild(document.createElement('p'));
+    review.lastChild.appendChild(document.createTextNode(object.reviews[i].review));
+    review.appendChild(document.createElement('hr'));
+  }
+  //Function creating a date text
+  function createDateText(date) {
+    var arr = date.split(' ');
+    return monthName(arr[0] - 1) + " " + arr[1] + ", " + arr[2];
   }
   //Adding price to product page
   var priceText = 'Price: $' + object.price.toFixed(2);
@@ -635,15 +666,83 @@ function createStars(rating) {
   var element = document.createElement('span');
   var counter = 0;
   for (var i = 0; i < Math.floor(rating); i++) {
-    element.appendChild(createElementWithClass('i','fa fa-star fa-lg'));
+    element.appendChild(createElementWithClass('i','fa fa-star fa-lg text-primary'));
     counter++;
   }
   if (rating % Math.floor(rating) != 0) {
-    element.appendChild(createElementWithClass('i','fa fa-star-half-o fa-lg'));
+    element.appendChild(createElementWithClass('i','fa fa-star-half-o fa-lg text-primary'));
     counter++;
   }
   for (var j = 0; j < 5 - counter; j++) {
-    element.appendChild(createElementWithClass('i','fa fa-star-o fa-lg'));
+    element.appendChild(createElementWithClass('i','fa fa-star-o fa-lg text-primary'));
   }
   return element;
 }
+//Event listener for write review button
+document.getElementById('write-review').addEventListener("click", function() {
+  document.getElementById('review-panel').className = "panel panel-default show";
+});
+//Event listener for review panel
+document.getElementById('review-panel').addEventListener("click", function(event) {
+  //Close button
+  if (event.target.id === "review-close") {
+    if (document.getElementById('warning-note')) {
+      document.getElementById('warning-note').remove();
+    }
+    document.getElementById('review-name').value = "";
+    document.getElementById('review-title').value = "";
+    document.getElementById('review-text').value = "";
+    for (var i = 0; i < document.getElementsByClassName('star-rate').length; i++) {
+      document.getElementsByClassName('star-rate')[i].className = "fa fa-star-o fa-3x text-primary star-rate";
+    }
+    document.getElementById('review-panel').className = "panel panel-default hide";
+  }
+  //Submit button
+  if (event.target.id === "review-submit") {
+    if (document.getElementById('warning-note')) {
+      document.getElementById('warning-note').remove();
+    }
+    if (document.getElementsByClassName('star-rate')[0].className.match('fa-star-o')) {
+      warningNote("Please enter star rating",'review-stars');
+      return;
+    }
+    if (document.getElementById('review-name').value === "") {
+      warningNote("Please write your name",'review-name');
+      return;
+    }
+    if (document.getElementById('review-title').value === "") {
+      warningNote("Please write a review headline", 'review-title');
+      return;
+    }
+    if (document.getElementById('review-text').value === "") {
+      warningNote("Please write a review", 'review-text');
+      return;
+    }
+    var rating = 0;
+    for (var j = 0; j < document.querySelectorAll('.star-rate').length; j++) {
+      if (!document.querySelectorAll('.star-rate')[j].className.includes('fa-star-o')) {
+        rating += 1;
+      }
+    }
+    var item = Number(document.getElementsByClassName('product-page')[0].getAttribute('data-item'));
+    foundItems[item].reviews.push({
+      stars: rating,
+      title: document.getElementById('review-title').value,
+      user: document.getElementById('review-name').value,
+      date: (today.getMonth() + 1) + " " + today.getDate() + " " + today.getFullYear(),
+      review: document.getElementById('review-text').value
+    })
+    document.getElementById('review-close').click();
+    productPage(foundItems[item]);
+  }
+  if (event.target.className.match('star-rate')) {
+    var stars = document.querySelectorAll('.star-rate');
+    var starFill = "fa fa-star fa-3x text-primary star-rate";
+    for (var j = 0; j < stars.length; j++) {
+      document.getElementsByClassName('star-rate')[j].className = starFill;
+      if (event.target === document.getElementsByClassName('star-rate')[j]) {
+        starFill = "fa fa-star-o fa-3x text-primary star-rate";
+      }
+    }
+  }
+});
