@@ -43,7 +43,7 @@ function displayResultsRow(str) {
     }
 
     var rating = sum / foundItems[i].reviews.length;
-    var row = createElementWithClass('div','row');
+    var row = createElementWithClass('div','row selector');
     var imageDiv = createElementWithClass('div','col-md-4');
     var image = createElementWithClass('img','img-responsive item-image');
     var dataDiv = createElementWithClass('div','col-md-8');
@@ -91,7 +91,7 @@ function displayResultsGrid(str) {
         var rating = sum / foundItems[item].reviews.length;
 
         var column = createElementWithClass('div','col-md-4');
-        var panel = createElementWithClass('div','panel panel-default');
+        var panel = createElementWithClass('div','panel panel-default selector');
         var header = createElementWithClass('div','panel-heading results');
         var title = createElementWithClass('h5','results-title');
         var body = createElementWithClass('div','panel-body');
@@ -113,6 +113,7 @@ function displayResultsGrid(str) {
         header.appendChild(title);
         panel.appendChild(body);
         body.appendChild(image);
+        body.appendChild(document.createElement('br'));
         body.appendChild(stars);
         stars.appendChild(createStars(rating));
         stars.appendChild(reviews);
@@ -176,38 +177,16 @@ document.getElementById('found-item').addEventListener("click", function(event) 
       }
     }
   }
-  var classList = event.target.className.split(' ');
-  //checking if an image was clicked
-  if (classList.indexOf('item-image') != -1) {
-    var itemList = document.querySelectorAll('.item-image');
-    for (var j = 0; j < itemList.length; j++) {
-      if (event.target == itemList[j]) {
-        document.getElementsByClassName('product-page')[0].setAttribute('data-item',j);
-        productPage(foundItems[j]);
-        return;
-      }
-    }
+  var classFinder = event.target;
+  while (!classFinder.className.includes('selector')) {
+    classFinder = classFinder.parentElement;
   }
-  //checking if the price was clicked
-  if (classList.indexOf('item-price') != -1) {
-    var itemList = document.querySelectorAll('.item-price');
-    for (var j = 0; j < itemList.length; j++) {
-      if (event.target == itemList[j]) {
-        document.getElementsByClassName('product-page')[0].setAttribute('data-item',j);
-        productPage(foundItems[j]);
-        return;
-      }
-    }
-  }
-  //checking if the title was clicked
-  if (classList.indexOf('item-title') != -1) {
-    var itemList = document.querySelectorAll('.item-title');
-    for (var j = 0; j < itemList.length; j++) {
-      if (event.target == itemList[j]) {
-        document.getElementsByClassName('product-page')[0].setAttribute('data-item',j);
-        productPage(foundItems[j]);
-        return;
-      }
+  var itemList = document.querySelectorAll('.selector');
+  for (var j = 0; j < itemList.length; j++) {
+    if (classFinder == itemList[j]) {
+      document.getElementsByClassName('product-page')[0].setAttribute('data-item',j);
+      productPage(foundItems[j]);
+      return;
     }
   }
 });
@@ -310,7 +289,7 @@ document.getElementById('cart-box-btn').addEventListener("click", function(event
 //Event listener and creation of the shopping cart page
 document.getElementsByClassName('cart-go')[0].addEventListener("click", function() {
   if (cart.length === 0) {
-    alert('Your cart is empty. Please add some items first.');
+    vex.dialog.alert('Your cart is empty. Please add some items first.');
     return;
   }
   while (document.getElementById('insert').nextSibling) {
@@ -331,6 +310,7 @@ document.getElementsByClassName('cart-go')[0].addEventListener("click", function
   var subTotalText = "Subtotal (" + totalItems + " items): $" + totalPrice.toFixed(2);
   parent.lastChild.appendChild(document.createTextNode(subTotalText));
   document.getElementById('shop-box-text').textContent = subTotalText;
+  document.getElementById('cart-items').textContent = " (" + totalItems + ")";
   showElements('main-bar','shop-page');
 })
 //Function to create shopping cart element
@@ -420,7 +400,7 @@ document.getElementById('shop-items').addEventListener("change", function(event)
 //Event listener for the checkout button creating checkout page
 document.getElementById('checkout').addEventListener("click", function(event) {
   if (cart.length === 0) {
-    alert('Your cart is empty. Please add some items first.');
+    vex.dialog.alert('Your cart is empty. Please add some items first.');
     return;
   }
   while(document.getElementById('review-items').lastChild) {
@@ -437,6 +417,7 @@ document.getElementById('checkout').addEventListener("click", function(event) {
     var form = createElementWithClass('form','form-inline');
     var formDiv = createElementWithClass('div','form-group');
     var qty = createElementWithClass('select','form-control review-item-qty');
+    var space = document.createElement('span');
     var trash = createElementWithClass('button','btn btn-info checkout-delete');
     var icon = createElementWithClass('i','fa fa-trash fa-lg');
     var text = document.createTextNode('  Delete');
@@ -444,6 +425,7 @@ document.getElementById('checkout').addEventListener("click", function(event) {
     image.setAttribute('src',cart[i].item.image);
     trash.setAttribute('type','button');
     title.textContent = cart[i].item.title;
+    space.textContent = " ";
     price.textContent = "$" + cart[i].item.price.toFixed(2);
 
     row.appendChild(imageDiv);
@@ -454,6 +436,7 @@ document.getElementById('checkout').addEventListener("click", function(event) {
     infoDiv.appendChild(form);
     form.appendChild(formDiv);
     formDiv.appendChild(qty);
+    formDiv.appendChild(space);
     formDiv.appendChild(trash);
     trash.appendChild(icon);
     trash.appendChild(text);
@@ -489,6 +472,10 @@ document.getElementsByClassName('order')[0].addEventListener("click", orderPage)
 document.getElementsByClassName('order')[1].addEventListener("click", orderPage);
 
 function orderPage() {
+  if (cart.length === 0) {
+    vex.dialog.alert("Your shopping cart is empty. Please add some items first.");
+    return;
+  }
   orders.push([]);
   for (var i = 0; i < cart.length; i++) {
     orders[orders.length - 1].push(cart[i]);
@@ -856,4 +843,24 @@ document.getElementsByClassName("user-menu")[0].addEventListener("click", functi
 //Event listener for main page button
 document.getElementById('reset').addEventListener("click", function() {
   showElements('main-bar','main-screen');
-})
+});
+//Event listener to logo click
+document.getElementById('logo').addEventListener("click", function() {
+  showElements('main-bar','main-screen');
+});
+
+document.getElementById('product-back').addEventListener("click", function() {
+  showElements('main-bar','results-summary','results-items');
+});
+
+document.getElementById('cart-back').addEventListener("click", function() {
+  showElements('main-bar','results-summary','results-items');
+});
+
+document.getElementById('checkout-back').addEventListener("click", function() {
+  document.getElementsByClassName('cart-go')[0].click();
+});
+
+document.getElementById('orders-back').addEventListener("click", function() {
+  showElements('main-bar','main-screen');
+});
