@@ -1,5 +1,5 @@
 //Creating a category variable, defaults to "All".
-var category = document.getElementById('category').innerText.trim();
+var category = document.getElementById('category').textContent.trim();
 //Creating variables for qty, price and cart items
 var totalPrice = 0;
 var totalItems = 0;
@@ -11,7 +11,7 @@ var foundItems = [];
 var orders = [];
 //Creating a category selector.
 document.getElementsByClassName('cat-menu')[0].addEventListener("click", function(event) {
-  category = event.target.innerText;
+  category = event.target.textContent;
   var text = category + " ";
   var element = document.createTextNode(text);
   document.getElementById('category').replaceChild(element, document.getElementById('category').firstChild);
@@ -25,7 +25,7 @@ for (var i = 0; i < 9; i++) {
   var randomItem = Math.floor(30 * Math.random());
   if (randomItems.indexOf(randomItem) === -1) {
     randomItems.push(randomItem);
-    titleElements[i].innerHTML = items[randomItem].title;
+    titleElements[i].textContent = items[randomItem].title;
     imageElements[i].setAttribute("src", items[randomItem].image);
   }
   else {
@@ -37,36 +37,41 @@ function displayResultsRow(str) {
   var text = document.createTextNode(str);
   document.getElementById('results-text').appendChild(text);
   for (var i = 0; i < foundItems.length; i++) {
-    var rowElement = createElementWithClass('div','row');
-    //Adding item image
-    rowElement.appendChild(createElementWithClass('div','col-md-4'));
-    rowElement.lastChild.appendChild(createElementWithClass('img','img-responsive item-image center-block'));
-    rowElement.lastChild.lastChild.setAttribute('src',foundItems[i].image);
-    rowElement.appendChild(createElementWithClass('div','col-md-8'));
-    //Adding item title
-    rowElement.lastChild.appendChild(createElementWithClass('h3','item-title'));
-    var text = document.createTextNode(foundItems[i].title);
-    rowElement.lastChild.lastChild.appendChild(text);
-    //Adding item reviews
     var sum = 0;
     for (var j = 0; j < foundItems[i].reviews.length; j++) {
       sum += foundItems[i].reviews[j].stars;
     }
+
     var rating = sum / foundItems[i].reviews.length;
-    rowElement.lastChild.appendChild(createElementWithClass('div','rating'));
-    rowElement.lastChild.lastChild.appendChild(createStars(rating));
-    rowElement.lastChild.lastChild.appendChild(document.createTextNode("  " + foundItems[i].reviews.length + " customer reviews."));
-    //Adding item price
-    rowElement.lastChild.appendChild(createElementWithClass('h4','item-price text-danger'));
-    var price = document.createTextNode('$' + foundItems[i].price.toFixed(2));
-    rowElement.lastChild.lastChild.appendChild(price);
-    //Adding "Add to Cart" button
-    rowElement.lastChild.appendChild(createElementWithClass('button','btn btn-success cart-btn'));
-    rowElement.lastChild.lastChild.appendChild(createElementWithClass('i','fa fa-cart-plus fa-lg'));
-    var cartText = document.createTextNode('  Add to Cart');
-    rowElement.lastChild.lastChild.appendChild(cartText);
-    rowElement.lastChild.lastChild.setAttribute('type','button');
-    document.getElementsByClassName('results-items')[0].appendChild(rowElement);
+    var row = createElementWithClass('div','row');
+    var imageDiv = createElementWithClass('div','col-md-4');
+    var image = createElementWithClass('img','img-responsive item-image');
+    var dataDiv = createElementWithClass('div','col-md-8');
+    var title = createElementWithClass('h3','item-title');
+    var stars = createElementWithClass('div','rating');
+    var price = createElementWithClass('h4','item-price text-danger');
+    var button = createElementWithClass('button','btn btn-success cart-btn');
+    var icon = createElementWithClass('i','fa fa-cart-plus fa-lg');
+    var text = document.createTextNode('  Add to Cart');
+
+    image.setAttribute('src', foundItems[i].image);
+    button.setAttribute('type','button');
+    title.textContent = foundItems[i].title;
+    price.textContent = "$" + foundItems[i].price.toFixed(2);
+
+    row.appendChild(imageDiv);
+    imageDiv.appendChild(image);
+    row.appendChild(dataDiv);
+    dataDiv.appendChild(title);
+    dataDiv.appendChild(stars);
+    stars.appendChild(createStars(rating));
+    stars.appendChild(document.createTextNode("  " + foundItems[i].reviews.length + " customer reviews."));
+    dataDiv.appendChild(price);
+    dataDiv.appendChild(button);
+    button.appendChild(icon);
+    button.appendChild(text);
+
+    document.getElementsByClassName('results-items')[0].appendChild(row);
     document.getElementsByClassName('results-items')[0].appendChild(document.createElement('hr'));
   }
 }
@@ -76,41 +81,50 @@ function displayResultsGrid(str) {
   document.getElementById('results-text').appendChild(text);
   var item = 0;
   for (var i = 0; i < Math.ceil(foundItems.length / 3); i++) {
-    var rowElement = createElementWithClass('div','row');
+    var row = createElementWithClass('div','row');
     for (var j = 0; j < 3; j++) {
       if (item < foundItems.length) {
-        var colElement = createElementWithClass('div','col-md-4');
-        colElement.appendChild(createElementWithClass('div','panel panel-default'));
-        colElement.lastChild.appendChild(createElementWithClass('div','panel-heading results'));
-        colElement.lastChild.lastChild.appendChild(createElementWithClass('h5','results-title'));
-        colElement.lastChild.lastChild.lastChild.appendChild(document.createTextNode(foundItems[item].title));
-        colElement.lastChild.appendChild(createElementWithClass('div','panel-body'));
-        //Adding image
-        colElement.lastChild.lastChild.appendChild(createElementWithClass('img','img-responsive panel-image center-block'));
-        colElement.lastChild.lastChild.lastChild.setAttribute('src', foundItems[item].image);
-        //Adding ratings
         var sum = 0;
         for (var k = 0; k < foundItems[item].reviews.length; k++) {
           sum += foundItems[item].reviews[k].stars;
         }
         var rating = sum / foundItems[item].reviews.length;
-        colElement.lastChild.lastChild.appendChild(createElementWithClass('div','rating'));
-        colElement.lastChild.lastChild.lastChild.appendChild(createStars(rating));
-        colElement.lastChild.lastChild.lastChild.appendChild(document.createTextNode("  " + foundItems[i].reviews.length + " customer reviews."));
-        //Adding price
-        colElement.lastChild.lastChild.appendChild(createElementWithClass('h4','text-danger'));
-        colElement.lastChild.lastChild.lastChild.appendChild(document.createTextNode('$' + foundItems[item].price.toFixed(2)));
-        //Adding cart button
-        colElement.lastChild.lastChild.appendChild(createElementWithClass('button','btn btn-success cart-btn'));
-        colElement.lastChild.lastChild.lastChild.appendChild(createElementWithClass('i','fa fa-cart-plus fa-lg'));
+
+        var column = createElementWithClass('div','col-md-4');
+        var panel = createElementWithClass('div','panel panel-default');
+        var header = createElementWithClass('div','panel-heading results');
+        var title = createElementWithClass('h5','results-title');
+        var body = createElementWithClass('div','panel-body');
+        var image = createElementWithClass('img','img-responsive panel-image');
+        var stars = createElementWithClass('div','rating');
+        var reviews = document.createTextNode("  " + foundItems[i].reviews.length + " customer reviews");
+        var price = createElementWithClass('h4','text-danger');
+        var button = createElementWithClass('button','btn btn-success cart-btn');
+        var icon = createElementWithClass('i','fa fa-cart-plus fa-lg');
         var cartText = document.createTextNode('  Add to Cart');
-        colElement.lastChild.lastChild.lastChild.appendChild(cartText);
-        colElement.lastChild.lastChild.setAttribute('type','button');
-        rowElement.appendChild(colElement);
+
+        title.textContent = foundItems[item].title;
+        price.textContent = '$' + foundItems[item].price.toFixed(2);
+        image.setAttribute('src', foundItems[item].image);
+        button.setAttribute('type','button');
+
+        column.appendChild(panel);
+        panel.appendChild(header);
+        header.appendChild(title);
+        panel.appendChild(body);
+        body.appendChild(image);
+        body.appendChild(stars);
+        stars.appendChild(createStars(rating));
+        stars.appendChild(reviews);
+        body.appendChild(price);
+        body.appendChild(button);
+        button.appendChild(icon);
+        button.appendChild(cartText);
+        row.appendChild(column);
         item++;
       }
     }
-    document.getElementsByClassName('results-items')[0].appendChild(rowElement);
+    document.getElementsByClassName('results-items')[0].appendChild(row);
   }
 }
 //Event listener for the 'Enter' key in the search field
@@ -233,19 +247,28 @@ function productPage(object) {
   document.getElementById('reviewers').appendChild(document.createTextNode("  " + object.reviews.length + " customer reviews"));
   var review = document.getElementById('review-insert');
   for (var i = 0; i < object.reviews.length; i++) {
-    review.appendChild(document.createElement('div'));
-    review.lastChild.appendChild(createStars(object.reviews[i].stars));
-    review.lastChild.appendChild(document.createElement('span'));
-    review.lastChild.lastChild.appendChild(document.createElement('b'));
-    review.lastChild.lastChild.lastChild.appendChild(document.createTextNode(" " + object.reviews[i].title));
-    review.appendChild(document.createElement('div'));
-    review.lastChild.appendChild(document.createElement('span'));
-    review.lastChild.lastChild.appendChild(document.createTextNode("By "));
-    review.lastChild.lastChild.appendChild(document.createElement('b'));
-    review.lastChild.lastChild.lastChild.appendChild(document.createTextNode(object.reviews[i].user));
-    review.lastChild.lastChild.appendChild(document.createTextNode(" on " + createDateText(object.reviews[i].date)));
-    review.appendChild(document.createElement('p'));
-    review.lastChild.appendChild(document.createTextNode(object.reviews[i].review));
+    var titleDiv = document.createElement('div');
+    var title = document.createElement('span');
+    var bold = document.createElement('b');
+    var infoDiv = document.createElement('div');
+    var info = document.createElement('span');
+    var bold = document.createElement('b');
+    var reviewText = document.createElement('p');
+
+    bold.textContent = " " + object.reviews[i].title;
+    bold.textContent = object.reviews[i].user;
+    reviewText.textContent = object.reviews[i].review;
+
+    review.appendChild(titleDiv);
+    titleDiv.appendChild(createStars(object.reviews[i].stars));
+    review.appendChild(title);
+    title.appendChild(bold);
+    review.appendChild(infoDiv);
+    infoDiv.appendChild(info);
+    info.appendChild(document.createTextNode("By "));
+    info.appendChild(bold);
+    info.appendChild(document.createTextNode(" on " + createDateText(object.reviews[i].date)));
+    infoDiv.appendChild(reviewText);
     review.appendChild(document.createElement('hr'));
   }
   //Function creating a date text
@@ -268,9 +291,9 @@ function productPage(object) {
 }
 //Add to cart function
 function addToCart(item, qty) {
-  var currentQtyString = document.getElementById('cart-items').innerText.trim();
+  var currentQtyString = document.getElementById('cart-items').textContent.trim();
   var currentQty = Number(currentQtyString.slice(1, currentQtyString.length - 1));
-  document.getElementById('cart-items').innerText = " (" + (currentQty + qty) + ")";
+  document.getElementById('cart-items').textContent = " (" + (currentQty + qty) + ")";
   for (var i = 0; i < cart.length; i++) {
     if (cart[i].item === item) {
       cart[i].quantity += qty;
@@ -293,55 +316,63 @@ document.getElementsByClassName('cart-go')[0].addEventListener("click", function
   while (document.getElementById('insert').nextSibling) {
     document.getElementById('insert').nextSibling.remove();
   }
-  var parentElement = document.getElementById('shop-items');
+  var parent = document.getElementById('shop-items');
   totalItems = 0;
   totalPrice = 0;
   for (var i = 0; i < cart.length; i++) {
     totalItems += cart[i].quantity;
     totalPrice += cart[i].item.price * cart[i].quantity;
-    parentElement.appendChild(createShoppingElement(cart[i].item,cart[i].quantity));
-    parentElement.appendChild(document.createElement('hr'));
+    parent.appendChild(createShoppingElement(cart[i].item,cart[i].quantity));
+    parent.appendChild(document.createElement('hr'));
   }
   var subTotal = createElementWithClass('p','pull-right');
   subTotal.id = 'subtotal';
-  parentElement.appendChild(subTotal);
+  parent.appendChild(subTotal);
   var subTotalText = "Subtotal (" + totalItems + " items): $" + totalPrice.toFixed(2);
-  parentElement.lastChild.appendChild(document.createTextNode(subTotalText));
-  document.getElementById('shop-box-text').innerText = subTotalText;
+  parent.lastChild.appendChild(document.createTextNode(subTotalText));
+  document.getElementById('shop-box-text').textContent = subTotalText;
   showElements('main-bar','shop-page');
 })
 //Function to create shopping cart element
 function createShoppingElement(obj, qty) {
-  var element = createElementWithClass('div','row');
-  //Adding the product image
-  element.appendChild(createElementWithClass('div','col-md-2'));
-  element.lastChild.appendChild(createElementWithClass('img','img-responsive'));
-  element.lastChild.lastChild.setAttribute('src',obj.image);
-  //Adding product title
-  element.appendChild(createElementWithClass('div','col-md-6'));
-  element.lastChild.appendChild(createElementWithClass('h4','shop-title'));
-  element.lastChild.lastChild.innerText = obj.title;
-  //Adding the delete from cart button
-  element.lastChild.appendChild(createElementWithClass('button','btn btn-info delete'));
-  element.lastChild.lastChild.setAttribute('type','button');
-  element.lastChild.lastChild.appendChild(createElementWithClass('i','fa fa-trash fa-lg'));
+  var row = createElementWithClass('div','row');
+  var imageDiv = createElementWithClass('div','col-md-2');
+  var image = createElementWithClass('img','img-responsive');
+  var infoDiv = createElementWithClass('div','col-md-6');
+  var title = createElementWithClass('h4','shop-title');
+  var trash = createElementWithClass('button','btn btn-info delete');
+  var icon = createElementWithClass('i','fa fa-trash fa-lg');
   var text = document.createTextNode('  Delete');
-  element.lastChild.lastChild.appendChild(text);
-  //Adding item price
-  element.appendChild(createElementWithClass('div','col-md-2'));
-  element.lastChild.appendChild(createElementWithClass('h4','text-danger shop-price'));
-  element.lastChild.lastChild.innerText = '$' + obj.price.toFixed(2);
-  //Creating quantity dropdown
-  element.appendChild(createElementWithClass('div','col-md-2'));
-  element.lastChild.appendChild(createElementWithClass('select','form-control form-inline shop-qty'));
+  var priceDiv = createElementWithClass('div','col-md-2');
+  var price = createElementWithClass('h4','text-danger shop-price');
+  var qtyDiv = createElementWithClass('div','col-md-2');
+  var quantity = createElementWithClass('select','form-control form-inline shop-qty');
+
+  image.setAttribute('src',obj.image);
+  trash.setAttribute('type','button');
+  title.textContent = obj.title;
+  price.textContent = '$' + obj.price.toFixed(2);
+
+  row.appendChild(imageDiv);
+  imageDiv.appendChild(image);
+  row.appendChild(infoDiv);
+  infoDiv.appendChild(title);
+  infoDiv.appendChild(trash);
+  trash.appendChild(icon);
+  trash.appendChild(text);
+  row.appendChild(priceDiv);
+  priceDiv.appendChild(price);
+  row.appendChild(qtyDiv);
+  qtyDiv.appendChild(quantity);
   for (var i = 1; i <= 10; i++) {
-    element.lastChild.lastChild.appendChild(document.createElement('option'));
-    element.lastChild.lastChild.lastChild.innerText = i;
+    var option = document.createElement('option');
+    quantity.appendChild(option);
+    option.textContent = i;
     if (qty === i) {
-      element.lastChild.lastChild.lastChild.setAttribute('selected',true)
+      option.setAttribute('selected',true);
     }
   }
-  return element;
+  return row;
 }
 //Event listener for deleting items from cart
 document.getElementById('shop-items').addEventListener("click", function(event) {
@@ -351,9 +382,9 @@ document.getElementById('shop-items').addEventListener("click", function(event) 
       if (event.target === document.getElementsByClassName('delete')[i]) {
         totalItems -= cart[i].quantity;
         totalPrice -= cart[i].item.price * cart[i].quantity;
-        document.getElementById('subtotal').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice.toFixed(2);
-        document.getElementById('shop-box-text').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice.toFixed(2);
-        document.getElementById('cart-items').innerText = " (" + totalItems + ")";
+        document.getElementById('subtotal').textContent = "Subtotal (" + totalItems + " items): $" + totalPrice.toFixed(2);
+        document.getElementById('shop-box-text').textContent = "Subtotal (" + totalItems + " items): $" + totalPrice.toFixed(2);
+        document.getElementById('cart-items').textContent = " (" + totalItems + ")";
         cart.splice(i, 1);
         var parent = document.getElementsByClassName('delete')[i].parentElement.parentElement;
         if (i === 0) {
@@ -378,9 +409,9 @@ document.getElementById('shop-items').addEventListener("change", function(event)
         totalItems += (newQty - cart[i].quantity);
         totalPrice += (newQty - cart[i].quantity) * cart[i].item.price;
         cart[i].quantity = newQty;
-        document.getElementById('subtotal').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice.toFixed(2);
-        document.getElementById('shop-box-text').innerText = "Subtotal (" + totalItems + " items): $" + totalPrice.toFixed(2);
-        document.getElementById('cart-items').innerText = " (" + totalItems + ")";
+        document.getElementById('subtotal').textContent = "Subtotal (" + totalItems + " items): $" + totalPrice.toFixed(2);
+        document.getElementById('shop-box-text').textContent = "Subtotal (" + totalItems + " items): $" + totalPrice.toFixed(2);
+        document.getElementById('cart-items').textContent = " (" + totalItems + ")";
         return;
       }
     }
@@ -396,35 +427,47 @@ document.getElementById('checkout').addEventListener("click", function(event) {
     document.getElementById('review-items').lastChild.remove();
   }
   for (var i = 0; i < cart.length; i++) {
-    var element = createElementWithClass('div','row');
-    //Adding image to the review box
-    element.appendChild(createElementWithClass('div','col-md-2'));
-    element.lastChild.appendChild(createElementWithClass('img','img-responsive'));
-    element.lastChild.lastChild.setAttribute('src',cart[i].item.image);
-    //Adding item title
-    element.appendChild(createElementWithClass('div','col-md-10'));
-    element.lastChild.appendChild(document.createElement('h5'));
-    element.lastChild.lastChild.innerText = cart[i].item.title;
-    //Adding item price
-    element.lastChild.appendChild(createElementWithClass('h5','text-danger'));
-    element.lastChild.lastChild.innerText = "$" + cart[i].item.price.toFixed(2);
-    //Adding quantity dropdown
-    element.lastChild.appendChild(createElementWithClass('form','form-inline'));
-    element.lastChild.lastChild.appendChild(createElementWithClass('div','form-group'));
-    element.lastChild.lastChild.lastChild.appendChild(createElementWithClass('select','form-control review-item-qty'));
+    var row = createElementWithClass('div','row');
+    var imageDiv = createElementWithClass('div','col-md-2');
+    var image = createElementWithClass('img','img-responsive');
+    var infoDiv = createElementWithClass('div','col-md-10');
+    var infoDiv = createElementWithClass('div','col-md-10');
+    var title = document.createElement('h5');
+    var price = createElementWithClass('h5','text-danger');
+    var form = createElementWithClass('form','form-inline');
+    var formDiv = createElementWithClass('div','form-group');
+    var qty = createElementWithClass('select','form-control review-item-qty');
+    var trash = createElementWithClass('button','btn btn-info checkout-delete');
+    var icon = createElementWithClass('i','fa fa-trash fa-lg');
+    var text = document.createTextNode('  Delete');
+
+    image.setAttribute('src',cart[i].item.image);
+    trash.setAttribute('type','button');
+    title.textContent = cart[i].item.title;
+    price.textContent = "$" + cart[i].item.price.toFixed(2);
+
+    row.appendChild(imageDiv);
+    imageDiv.appendChild(image);
+    row.appendChild(infoDiv);
+    infoDiv.appendChild(title);
+    infoDiv.appendChild(price);
+    infoDiv.appendChild(form);
+    form.appendChild(formDiv);
+    formDiv.appendChild(qty);
+    formDiv.appendChild(trash);
+    trash.appendChild(icon);
+    trash.appendChild(text);
+
     for (var j = 1; j <= 10; j++) {
-      element.lastChild.lastChild.lastChild.lastChild.appendChild(document.createElement('option'));
-      element.lastChild.lastChild.lastChild.lastChild.lastChild.innerText = j;
+      var option = document.createElement('option');
+      qty.appendChild(option);
+      option.textContent = j;
       if (j === cart[i].quantity) {
-        element.lastChild.lastChild.lastChild.lastChild.lastChild.setAttribute('selected',true);
+        option.setAttribute('selected',true);
       }
     }
-    element.lastChild.lastChild.lastChild.appendChild(createElementWithClass('button','btn btn-info checkout-delete'));
-    element.lastChild.lastChild.lastChild.lastChild.appendChild(createElementWithClass('i','fa fa-trash fa-lg'));
-    var text = document.createTextNode('  Delete');
-    element.lastChild.lastChild.lastChild.lastChild.appendChild(text);
-    element.lastChild.lastChild.lastChild.lastChild.setAttribute('type','button');
-    document.getElementById('review-items').appendChild(element);
+
+    document.getElementById('review-items').appendChild(row);
   }
   today.setDate(today.getDate() + 7);
   updateCheckoutPage();
@@ -455,11 +498,10 @@ function orderPage() {
   orders[orders.length - 1].push(document.getElementById('order-total').textContent);
   cart = [];
   document.getElementById('cart-items').textContent = " (0)";
-  document.getElementById('charge-text').innerText = "We did not charge $" + (totalPrice * (1 + taxRate) + shippingPrice).toFixed(2) + " to your credit card";
+  document.getElementById('charge-text').textContent = "We did not charge $" + (totalPrice * (1 + taxRate) + shippingPrice).toFixed(2) + " to your credit card";
   var date = monthName(today.getMonth()) + ' ' + today.getDate() + ', ' + today.getFullYear();
   document.getElementById('delivery-order').textContent = "Your order will not be delivered on: " + date + " since we don't really sell anything"
   showElements('order-page');
-  window.setTimeout(showElements, 5000,'main-bar','main-screen');
 }
 //Create event listener to the address modal
 document.getElementsByClassName('address-btn')[0].addEventListener("click", function() {
@@ -586,16 +628,16 @@ document.getElementById('checkout-box').addEventListener("click", function(event
 });
 //Function to update the checkout page information
 function updateCheckoutPage() {
-  document.getElementById('checkout-text').innerText = 'Checkout (' + totalItems + ' items)';
-  document.getElementById('checkout-box-items').innerText = "Items (" + totalItems + "):";
-  document.getElementById('checkout-price').innerText = "$" + totalPrice.toFixed(2);
-  document.getElementById('shipping').innerText = "$" + shippingPrice.toFixed(2);
-  document.getElementById('before-tax').innerText = "$" + (shippingPrice + totalPrice).toFixed(2);
-  document.getElementById('tax').innerText = "$" + (totalPrice * taxRate).toFixed(2);
-  document.getElementById('order-total').innerText = "$" + (totalPrice * (1 + taxRate) + shippingPrice).toFixed(2);
-  document.getElementById('order-total-bottom').innerText = "Order total: $" + (totalPrice * (1 + taxRate) + shippingPrice).toFixed(2);
+  document.getElementById('checkout-text').textContent = 'Checkout (' + totalItems + ' items)';
+  document.getElementById('checkout-box-items').textContent = "Items (" + totalItems + "):";
+  document.getElementById('checkout-price').textContent = "$" + totalPrice.toFixed(2);
+  document.getElementById('shipping').textContent = "$" + shippingPrice.toFixed(2);
+  document.getElementById('before-tax').textContent = "$" + (shippingPrice + totalPrice).toFixed(2);
+  document.getElementById('tax').textContent = "$" + (totalPrice * taxRate).toFixed(2);
+  document.getElementById('order-total').textContent = "$" + (totalPrice * (1 + taxRate) + shippingPrice).toFixed(2);
+  document.getElementById('order-total-bottom').textContent = "Order total: $" + (totalPrice * (1 + taxRate) + shippingPrice).toFixed(2);
   var date = monthName(today.getMonth()) + ' ' + today.getDate() + ', ' + today.getFullYear();
-  document.getElementById('delivery-text').innerText = 'Estimated delivery: ' + date;
+  document.getElementById('delivery-text').textContent = 'Estimated delivery: ' + date;
 }
 //function to retrieve month name
 function monthName(month) {
@@ -631,7 +673,7 @@ document.getElementById('grid-view').addEventListener("click", function(event) {
   if (document.getElementById('grid-view').className.split(' ').indexOf('btn-default') != -1) {
     document.getElementById('grid-view').className = 'btn btn-primary';
     document.getElementById('row-view').className = 'btn btn-default';
-    var str = document.getElementById('results-text').innerText;
+    var str = document.getElementById('results-text').textContent;
     clearOldResults();
     displayResultsGrid(str);
   }
@@ -640,14 +682,14 @@ document.getElementById('row-view').addEventListener("click", function(event) {
   if (document.getElementById('row-view').className.split(' ').indexOf('btn-default') != -1) {
     document.getElementById('row-view').className = 'btn btn-primary';
     document.getElementById('grid-view').className = 'btn btn-default';
-    var str = document.getElementById('results-text').innerText;
+    var str = document.getElementById('results-text').textContent;
     clearOldResults();
     displayResultsRow(str);
   }
 });
 //Adding event listener to sort search results
 document.getElementById('results-sort').addEventListener("click", function() {
-  var sort = event.target.innerText;
+  var sort = event.target.textContent;
   var text = sort + " ";
   var element = document.createTextNode(text);
   document.getElementById('sort-btn').replaceChild(element, document.getElementById('sort-btn').firstChild);
@@ -667,7 +709,7 @@ document.getElementById('results-sort').addEventListener("click", function() {
     if (sort === "Price: High to Low") {
       foundItems.reverse();
     }
-    var text = document.getElementById('results-text').innerText;
+    var text = document.getElementById('results-text').textContent;
     clearOldResults();
     if (document.getElementById('grid-view').className === "btn btn-primary") {
       displayResultsGrid(text);
@@ -768,29 +810,50 @@ document.getElementsByClassName("user-menu")[0].addEventListener("click", functi
     while (document.getElementById('orders-list').lastChild) {
       document.getElementById('orders-list').lastChild.remove();
     }
-    var element = document.getElementById('orders-list');
+    var list = document.getElementById('orders-list');
     for (var i = 0; i < orders.length; i++) {
-      element.appendChild(createElementWithClass('div','panel panel-default'));
-      element.lastChild.appendChild(createElementWithClass('div','panel-heading'));
-      element.lastChild.lastChild.appendChild(document.createElement('span'));
-      element.lastChild.lastChild.lastChild.textContent = "Order placed: " + orders[i][orders[i].length - 2] + " | ";
-      element.lastChild.lastChild.appendChild(document.createElement('span'));
-      element.lastChild.lastChild.lastChild.textContent = " Order total: " + orders[i][orders[i].length - 1];
-      element.lastChild.appendChild(createElementWithClass('div','panel-body'));
+      var panel = createElementWithClass('div','panel panel-default');
+      var heading = createElementWithClass('div','panel-heading');
+      var date = document.createElement('span');
+      var total = document.createElement('span');
+      var body = createElementWithClass('div','panel-body');
+
+      date.textContent = "Order placed: " + orders[i][orders[i].length - 2] + " | ";
+      total.textContent = " Order total: " + orders[i][orders[i].length - 1];
+
+      list.appendChild(panel);
+      panel.appendChild(heading);
+      heading.appendChild(date);
+      heading.appendChild(total);
+      panel.appendChild(body);
+
       for (var j = 0; j < orders[i].length - 2; j++) {
-        element.lastChild.lastChild.appendChild(createElementWithClass('div','row'));
-        element.lastChild.lastChild.lastChild.appendChild(createElementWithClass('div','col-md-3'));
-        element.lastChild.lastChild.lastChild.lastChild.appendChild(createElementWithClass('img','img-responsive'));
-        element.lastChild.lastChild.lastChild.lastChild.lastChild.setAttribute('src',orders[i][j].item.image);
-        element.lastChild.lastChild.lastChild.appendChild(createElementWithClass('div','col-md-9'));
-        element.lastChild.lastChild.lastChild.lastChild.appendChild(document.createElement('h4'));
-        element.lastChild.lastChild.lastChild.lastChild.lastChild.textContent = orders[i][j].item.title;
-        element.lastChild.lastChild.lastChild.lastChild.appendChild(createElementWithClass('h4','text-danger'));
-        element.lastChild.lastChild.lastChild.lastChild.lastChild.textContent = "$" + orders[i][j].item.price.toFixed(2);
-        element.lastChild.lastChild.lastChild.lastChild.appendChild(document.createElement('p'));
-        element.lastChild.lastChild.lastChild.lastChild.lastChild.textContent = "Qty: " + orders[i][j].quantity;
+        var row = createElementWithClass('div','row');
+        var imageDiv = createElementWithClass('div','col-md-3');
+        var image = createElementWithClass('img','img-responsive');
+        var infoDiv = createElementWithClass('div','col-md-9');
+        var title = document.createElement('h4');
+        var price = createElementWithClass('h4','text-danger');
+        var qty = document.createElement('p');
+
+        image.setAttribute('src', orders[i][j].item.image);
+        title.textContent = orders[i][j].item.title;
+        price.textContent = "$" + orders[i][j].item.price.toFixed(2);
+        qty.textContent = "Qty: " + orders[i][j].quantity;
+
+        body.appendChild(row);
+        row.appendChild(imageDiv);
+        imageDiv.appendChild(image);
+        row.appendChild(infoDiv);
+        infoDiv.appendChild(title);
+        infoDiv.appendChild(price);
+        infoDiv.appendChild(qty);
       }
     }
   }
   showElements('main-bar','past-orders');
 });
+//Event listener for main page button
+document.getElementById('reset').addEventListener("click", function() {
+  showElements('main-bar','main-screen');
+})
