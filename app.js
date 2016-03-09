@@ -251,24 +251,24 @@ function productPage(object) {
   for (var i = 0; i < object.reviews.length; i++) {
     var titleDiv = document.createElement('div');
     var title = document.createElement('span');
-    var bold = document.createElement('b');
+    var boldUser = document.createElement('b');
     var infoDiv = document.createElement('div');
     var info = document.createElement('span');
-    var bold = document.createElement('b');
+    var boldTitle = document.createElement('b');
     var reviewText = document.createElement('p');
 
-    bold.textContent = " " + object.reviews[i].title;
-    bold.textContent = object.reviews[i].user;
+    boldTitle.textContent = " " + object.reviews[i].title;
+    boldUser.textContent = object.reviews[i].user;
     reviewText.textContent = object.reviews[i].review;
 
     review.appendChild(titleDiv);
     titleDiv.appendChild(createStars(object.reviews[i].stars));
-    review.appendChild(title);
-    title.appendChild(bold);
+    titleDiv.appendChild(title);
+    title.appendChild(boldTitle);
     review.appendChild(infoDiv);
     infoDiv.appendChild(info);
     info.appendChild(document.createTextNode("By "));
-    info.appendChild(bold);
+    info.appendChild(boldUser);
     info.appendChild(document.createTextNode(" on " + createDateText(object.reviews[i].date)));
     infoDiv.appendChild(reviewText);
     review.appendChild(document.createElement('hr'));
