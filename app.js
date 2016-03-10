@@ -25,18 +25,23 @@ document.getElementsByClassName('cat-menu')[0].addEventListener("click", functio
 var titleElements = document.getElementsByClassName('main-title');
 var imageElements = document.getElementsByClassName('panel-image');
 var randomItems = [];
-
-for (var i = 0; i < 9; i++) {
-  var randomItem = Math.floor(30 * Math.random());
-  if (randomItems.indexOf(randomItem) === -1) {
-    randomItems.push(randomItem);
-    titleElements[i].textContent = items[randomItem].title;
-    imageElements[i].setAttribute("src", items[randomItem].image.panel);
-  }
-  else {
-    i--;
+//Function to display front page random items
+function frontPageItems() {
+  for (var i = 0; i < 9; i++) {
+    var randomItem = Math.floor(30 * Math.random());
+    if (randomItems.indexOf(randomItem) === -1) {
+      randomItems.push(randomItem);
+      titleElements[i].textContent = items[randomItem].title;
+      imageElements[i].setAttribute("src", items[randomItem].image.panel);
+      titleElements[i].setAttribute('data-id', randomItem);
+      imageElements[i].setAttribute('data-id', randomItem);
+    }
+    else {
+      i--;
+    }
   }
 }
+frontPageItems();
 //Creating row display element
 function displayResultsRow(str) {
   var text = document.createTextNode(str);
@@ -195,7 +200,7 @@ function clearOldResults() {
 }
 //Create event listener that shows the product page for selected product
 document.getElementById('found-item').addEventListener("click", function(event) {
-  if (event.target.className.split(' ').indexOf('cart-btn') != -1) {
+  if (event.target.className.includes('cart-btn')) {
     var itemList = document.querySelectorAll('.cart-btn');
     for (var i = 0; i < itemList.length; i++) {
       if (event.target === itemList[i]) {
@@ -212,7 +217,10 @@ document.getElementById('found-item').addEventListener("click", function(event) 
   for (var j = 0; j < itemList.length; j++) {
     if (classFinder == itemList[j]) {
       document.getElementsByClassName('product-page')[0].setAttribute('data-item',j);
-      mine.views.push({category: foundItems[j].category, manufacturer: foundItems[j].manufacturer});
+      mine.views.push({
+        category: foundItems[j].category,
+        manufacturer: foundItems[j].manufacturer
+      });
       productPage(foundItems[j]);
       return;
     }
@@ -251,7 +259,8 @@ function productPage(object) {
   }
   var rating = sum / object.reviews.length;
   document.getElementById('stars').appendChild(createStars(rating));
-  document.getElementById('reviewers').appendChild(document.createTextNode("  " + object.reviews.length + " customer reviews"));
+  var reviewText = document.createTextNode("  " + object.reviews.length + " customer reviews");
+  document.getElementById('reviewers').appendChild(reviewText);
   var review = document.getElementById('review-insert');
   for (var i = 0; i < object.reviews.length; i++) {
     var titleDiv = document.createElement('div');
@@ -312,7 +321,13 @@ function addToCart(item, qty) {
 //Event listener for add to cart button on the product page
 document.getElementById('cart-box-btn').addEventListener("click", function(event) {
   var item = Number(document.getElementsByClassName('product-page')[0].getAttribute('data-item'));
-  addToCart(foundItems[item], Number(document.getElementsByClassName('qty')[0].value));
+  if (!item) {
+    item = Number(document.getElementsByClassName('product-page')[0].getAttribute('data-id'));
+    addToCart(items[item], Number(document.getElementsByClassName('qty')[0].value));
+  }
+  else {
+    addToCart(foundItems[item], Number(document.getElementsByClassName('qty')[0].value));
+  }
 })
 //Event listener and creation of the shopping cart page
 document.getElementsByClassName('cart-go')[0].addEventListener("click", function() {
@@ -384,7 +399,7 @@ function createShoppingElement(obj, qty) {
 }
 //Event listener for deleting items from cart
 document.getElementById('shop-items').addEventListener("click", function(event) {
-  if (event.target.className.split(' ').indexOf('delete') != -1) {
+  if (event.target.className.includes('delete')) {
     var length = document.getElementsByClassName('delete').length;
     for (var i = 0; i < length; i++) {
       if (event.target === document.getElementsByClassName('delete')[i]) {
@@ -409,7 +424,7 @@ document.getElementById('shop-items').addEventListener("click", function(event) 
 })
 //Event listener for changing item quantity in the cart
 document.getElementById('shop-items').addEventListener("change", function(event) {
-  if (event.target.className.split(' ').indexOf('shop-qty') != -1) {
+  if (event.target.className.includes('shop-qty') != -1) {
     var length = document.getElementsByClassName('shop-qty').length;
     for (var i = 0; i < length; i++) {
       if (event.target === document.getElementsByClassName('shop-qty')[i]) {
@@ -498,10 +513,18 @@ function showElements() {
 //Create an event listener for the "Place your order" buttons
 document.getElementsByClassName('order')[0].addEventListener("click", orderPage);
 document.getElementsByClassName('order')[1].addEventListener("click", orderPage);
-
+//Function for placing your order
 function orderPage() {
   if (cart.length === 0) {
     vex.dialog.alert("Your shopping cart is empty. Please add some items first.");
+    return;
+  }
+  if (document.getElementById('address-text').textContent === "Please enter your address") {
+    vex.dialog.alert("Please enter your shipping address");
+    return;
+  }
+  if (document.getElementById('payment-text').textContent === "Please enter payment method") {
+    vex.dialog.alert("Please enter your payment method");
     return;
   }
   orders.push([]);
@@ -570,7 +593,7 @@ document.getElementsByClassName('payment-btn')[0].addEventListener("click", func
   if (document.getElementById('warning-note')) {
     document.getElementById('warning-note').remove();
   }
-  if (document.getElementById('pay-card').value === "" || isNaN(Number(document.getElementById('pay-card').value))) {
+  if (document.getElementById('pay-card').value === "" || document.getElementById('pay-card').value.length != 16) {
     warningNote('Please enter a valid card number','pay-card');
     return;
   }
@@ -580,7 +603,7 @@ document.getElementsByClassName('payment-btn')[0].addEventListener("click", func
   }
   var element = document.getElementById('payment-text');
   element.lastChild.remove();
-  var text = 'Card ending in ' + document.getElementById('pay-card').value;
+  var text = 'Card ending in ' + document.getElementById('pay-card').value.toString().substr(12, 4);
   element.appendChild(document.createTextNode(text));
   document.getElementById('payment-close').click();
 });
@@ -735,7 +758,7 @@ document.getElementById('results-sort').addEventListener("click", function() {
     }
   }
 });
-
+//Function to create the full, half and empty stars based on provided rating
 function createStars(rating) {
   var element = document.createElement('span');
   var counter = 0;
@@ -757,15 +780,14 @@ document.getElementById('write-review').addEventListener("click", function() {
   document.getElementById('review-panel').className = "panel panel-default show";
 });
 //Event listener for review panel
-document.getElementById('review-panel').addEventListener("click", function(event) {
+var reviewPanel = document.getElementById('review-panel');
+reviewPanel.addEventListener("click", function(event) {
   //Close button
   if (event.target.id === "review-close") {
     if (document.getElementById('warning-note')) {
       document.getElementById('warning-note').remove();
     }
-    document.getElementById('review-name').value = "";
-    document.getElementById('review-title').value = "";
-    document.getElementById('review-text').value = "";
+    reviewPanel.getElementsByTagName('form')[0].reset();
     for (var i = 0; i < document.getElementsByClassName('star-rate').length; i++) {
       document.getElementsByClassName('star-rate')[i].className = "fa fa-star-o fa-3x text-primary star-rate";
     }
@@ -776,7 +798,7 @@ document.getElementById('review-panel').addEventListener("click", function(event
     if (document.getElementById('warning-note')) {
       document.getElementById('warning-note').remove();
     }
-    if (document.getElementsByClassName('star-rate')[0].className.match('fa-star-o')) {
+    if (document.getElementsByClassName('star-rate')[0].className.includes('fa-star-o')) {
       warningNote("Please enter star rating",'review-stars');
       return;
     }
@@ -809,7 +831,7 @@ document.getElementById('review-panel').addEventListener("click", function(event
     document.getElementById('review-close').click();
     productPage(foundItems[item]);
   }
-  if (event.target.className.match('star-rate')) {
+  if (event.target.className.includes('star-rate')) {
     var stars = document.querySelectorAll('.star-rate');
     var starFill = "fa fa-star fa-3x text-primary star-rate";
     for (var j = 0; j < stars.length; j++) {
@@ -870,8 +892,9 @@ document.getElementsByClassName("user-menu")[0].addEventListener("click", functi
   showElements('main-bar','past-orders');
 });
 //Event listener for main page button
-document.getElementById('reset').addEventListener("click", function() {
+document.getElementById('home').addEventListener("click", function() {
   calculateRecommendations();
+  today = new Date();
   showElements('main-bar','main-screen','recommended','search-panel');
 });
 //Event listener to logo click
@@ -879,7 +902,7 @@ document.getElementById('logo').addEventListener("click", function() {
   calculateRecommendations();
   showElements('main-bar','main-screen','recommended','search-panel');
 });
-
+//Event lsiteners for back buttons on product, cart, checkout and orders pages
 document.getElementById('product-back').addEventListener("click", function() {
   showElements('main-bar','results-summary','results-items','search-panel');
 });
@@ -901,7 +924,7 @@ document.getElementById('checkout-back').addEventListener("click", function() {
 document.getElementById('orders-back').addEventListener("click", function() {
   showElements('main-bar','main-screen','search-panel','recommended');
 });
-
+//Function that calculates recommended items for display
 function calculateRecommendations() {
   var fullMatch = [];
   var catMatch = [];
@@ -956,7 +979,17 @@ function calculateRecommendations() {
     document.getElementsByClassName('recommend')[i].setAttribute('data-id', recommend[i]);
   }
 }
-
+//Event listener for recommended items to display the product page
 document.getElementsByClassName('recommended')[0].addEventListener("click", function(event) {
-  productPage(items[event.target.getAttribute('data-id')]);
+  var item = Number(event.target.getAttribute('data-id'));
+  document.getElementsByClassName('product-page')[0].setAttribute('data-item',false);
+  document.getElementsByClassName('product-page')[0].setAttribute('data-id',item);
+  productPage(items[item]);
+})
+//Event listener for front page items to display the product page
+document.getElementById('random-items').addEventListener("click", function(event) {
+  var item = Number(event.target.getAttribute('data-id'));
+  document.getElementsByClassName('product-page')[0].setAttribute('data-item',false);
+  document.getElementsByClassName('product-page')[0].setAttribute('data-id',item);
+  productPage(items[item]);
 })
