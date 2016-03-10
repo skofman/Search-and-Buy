@@ -31,7 +31,7 @@ for (var i = 0; i < 9; i++) {
   if (randomItems.indexOf(randomItem) === -1) {
     randomItems.push(randomItem);
     titleElements[i].textContent = items[randomItem].title;
-    imageElements[i].setAttribute("src", items[randomItem].image);
+    imageElements[i].setAttribute("src", items[randomItem].image.panel);
   }
   else {
     i--;
@@ -59,7 +59,7 @@ function displayResultsRow(str) {
     var icon = createElementWithClass('i','fa fa-cart-plus fa-lg');
     var text = document.createTextNode('  Add to Cart');
 
-    image.setAttribute('src', foundItems[i].image);
+    image.setAttribute('src', foundItems[i].image.cart);
     button.setAttribute('type','button');
     title.textContent = foundItems[i].title;
     price.textContent = "$" + foundItems[i].price.toFixed(2);
@@ -110,7 +110,7 @@ function displayResultsGrid(str) {
 
         title.textContent = foundItems[item].title;
         price.textContent = '$' + foundItems[item].price.toFixed(2);
-        image.setAttribute('src', foundItems[item].image);
+        image.setAttribute('src', foundItems[item].image.panel);
         button.setAttribute('type','button');
 
         column.appendChild(panel);
@@ -240,7 +240,7 @@ function productPage(object) {
     document.getElementById('features').lastChild.remove();
   }
   //Adding image to product page
-  document.getElementById('product-image').setAttribute('src',object.image);
+  document.getElementById('product-image').setAttribute('src',object.image.panel);
   //Adding title to product page
   var titleTextNode = document.createTextNode(object.title);
   document.getElementById('product-title').appendChild(titleTextNode);
@@ -356,7 +356,7 @@ function createShoppingElement(obj, qty) {
   var qtyDiv = createElementWithClass('div','col-md-2');
   var quantity = createElementWithClass('select','form-control form-inline shop-qty');
 
-  image.setAttribute('src',obj.image);
+  image.setAttribute('src',obj.image.cart);
   trash.setAttribute('type','button');
   title.textContent = obj.title;
   price.textContent = '$' + obj.price.toFixed(2);
@@ -450,7 +450,7 @@ document.getElementById('checkout').addEventListener("click", function(event) {
     var icon = createElementWithClass('i','fa fa-trash fa-lg');
     var text = document.createTextNode('  Delete');
 
-    image.setAttribute('src',cart[i].item.image);
+    image.setAttribute('src',cart[i].item.image.cart);
     trash.setAttribute('type','button');
     title.textContent = cart[i].item.title;
     space.textContent = " ";
@@ -852,7 +852,7 @@ document.getElementsByClassName("user-menu")[0].addEventListener("click", functi
         var price = createElementWithClass('h4','text-danger');
         var qty = document.createElement('p');
 
-        image.setAttribute('src', orders[i][j].item.image);
+        image.setAttribute('src', orders[i][j].item.image.cart);
         title.textContent = orders[i][j].item.title;
         price.textContent = "$" + orders[i][j].item.price.toFixed(2);
         qty.textContent = "Qty: " + orders[i][j].quantity;
@@ -952,7 +952,7 @@ function calculateRecommendations() {
   }
   var classList = document.querySelectorAll('.recommend');
   for (var i = 0; i < classList.length; i++) {
-    document.getElementsByClassName('recommend')[i].setAttribute('src', items[recommend[i]].image);
+    document.getElementsByClassName('recommend')[i].setAttribute('src', items[recommend[i]].image.panel);
     document.getElementsByClassName('recommend')[i].setAttribute('data-id', recommend[i]);
   }
 }
