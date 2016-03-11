@@ -283,7 +283,11 @@ document.getElementById('wish-list').addEventListener("click", function(event) {
   var itemList = document.querySelectorAll('.wish');
   for (var j = 0; j < itemList.length; j++) {
     if (classFinder == itemList[j]) {
-      document.getElementsByClassName('product-page')[0].setAttribute('data-item',j);
+      for (var k = 0; k < items.length; k++) {
+        if (wishlist[j].item == items[k]) {
+          document.getElementsByClassName('product-page')[0].setAttribute('data-id',k);
+        }
+      }
       mine.views.push({
         category: wishlist[j].item.category,
         manufacturer: wishlist[j].item.manufacturer
