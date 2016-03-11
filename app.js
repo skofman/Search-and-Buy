@@ -9,6 +9,7 @@ var cart = [];
 var today = new Date();
 var foundItems = [];
 var orders = [];
+var wishlist = [];
 var mine = {
   searches: [],
   views: []
@@ -63,9 +64,14 @@ function displayResultsRow(str) {
     var button = createElementWithClass('button','btn btn-success cart-btn');
     var icon = createElementWithClass('i','fa fa-cart-plus fa-lg');
     var text = document.createTextNode('  Add to Cart');
+    var wish = createElementWithClass('button','btn btn-info wish-btn');
+    var wishIcon = createElementWithClass('i','fa fa-heart fa-lg');
+    var wishText = document.createTextNode('  Add to Wishlist');
+    var spacing = document.createElement('p');
 
     image.setAttribute('src', foundItems[i].image.cart);
     button.setAttribute('type','button');
+    wish.setAttribute('type','button');
     title.textContent = foundItems[i].title;
     price.textContent = "$" + foundItems[i].price.toFixed(2);
 
@@ -78,8 +84,12 @@ function displayResultsRow(str) {
     stars.appendChild(document.createTextNode("  " + foundItems[i].reviews.length + " customer reviews."));
     dataDiv.appendChild(price);
     dataDiv.appendChild(button);
+    dataDiv.appendChild(spacing);
+    dataDiv.appendChild(wish);
     button.appendChild(icon);
     button.appendChild(text);
+    wish.appendChild(wishIcon);
+    wish.appendChild(wishText);
 
     document.getElementsByClassName('results-items')[0].appendChild(row);
     document.getElementsByClassName('results-items')[0].appendChild(document.createElement('hr'));
@@ -112,11 +122,15 @@ function displayResultsGrid(str) {
         var button = createElementWithClass('button','btn btn-success cart-btn');
         var icon = createElementWithClass('i','fa fa-cart-plus fa-lg');
         var cartText = document.createTextNode('  Add to Cart');
+        var wish = createElementWithClass('button','btn btn-info wish-btn spacing');
+        var wishIcon = createElementWithClass('i','fa fa-heart fa-lg');
+        var wishText = document.createTextNode('  Add to Wishlist');
 
         title.textContent = foundItems[item].title;
         price.textContent = '$' + foundItems[item].price.toFixed(2);
         image.setAttribute('src', foundItems[item].image.panel);
         button.setAttribute('type','button');
+        wish.setAttribute('type','button');
 
         column.appendChild(panel);
         panel.appendChild(header);
@@ -129,8 +143,11 @@ function displayResultsGrid(str) {
         stars.appendChild(reviews);
         body.appendChild(price);
         body.appendChild(button);
+        body.appendChild(wish);
         button.appendChild(icon);
         button.appendChild(cartText);
+        wish.appendChild(wishIcon);
+        wish.appendChild(wishText);
         row.appendChild(column);
         item++;
       }
@@ -200,11 +217,21 @@ function clearOldResults() {
 }
 //Create event listener that shows the product page for selected product
 document.getElementById('found-item').addEventListener("click", function(event) {
+  var check = false;
   if (event.target.className.includes('cart-btn')) {
     var itemList = document.querySelectorAll('.cart-btn');
     for (var i = 0; i < itemList.length; i++) {
       if (event.target === itemList[i]) {
         addToCart(foundItems[i], 1);
+        return;
+      }
+    }
+  }
+  else if (event.target.className.includes('wish-btn')) {
+    itemList = document.querySelectorAll('.wish-btn');
+    for (var i = 0; i < itemList.length; i++) {
+      if (event.target === itemList[i]) {
+        addWish(foundItems[i]);
         return;
       }
     }
@@ -222,6 +249,46 @@ document.getElementById('found-item').addEventListener("click", function(event) 
         manufacturer: foundItems[j].manufacturer
       });
       productPage(foundItems[j]);
+      return;
+    }
+  }
+});
+//Create event listener that shows the product page from wishlist
+document.getElementById('wish-list').addEventListener("click", function(event) {
+  var check = false;
+  if (event.target.className.includes('wl-cart-btn')) {
+    var itemList = document.querySelectorAll('.wl-cart-btn');
+    for (var i = 0; i < itemList.length; i++) {
+      if (event.target === itemList[i]) {
+        addToCart(wishlist[i].item, 1);
+        return;
+      }
+    }
+  }
+  else if (event.target.className.includes('wl-remove-btn')) {
+    itemList = document.querySelectorAll('.wl-remove-btn');
+    for (var i = 0; i < itemList.length; i++) {
+      if (event.target === itemList[i]) {
+        wishlist.splice(i, 1);
+        var parent = document.getElementsByClassName('wl-remove-btn')[i].parentElement.parentElement.parentElement.parentElement;
+        parent.remove();
+        return;
+      }
+    }
+  }
+  var classFinder = event.target;
+  while (!classFinder.className.includes('wish')) {
+    classFinder = classFinder.parentElement;
+  }
+  var itemList = document.querySelectorAll('.wish');
+  for (var j = 0; j < itemList.length; j++) {
+    if (classFinder == itemList[j]) {
+      document.getElementsByClassName('product-page')[0].setAttribute('data-item',j);
+      mine.views.push({
+        category: wishlist[j].item.category,
+        manufacturer: wishlist[j].item.manufacturer
+      });
+      productPage(wishlist[j].item);
       return;
     }
   }
@@ -318,6 +385,22 @@ function addToCart(item, qty) {
   }
   cart.push({item: item, quantity: qty});
 }
+//Add to wishlist function
+function addWish(item) {
+  var check = false;
+  for (var i = 0; i < wishlist.length; i++) {
+    if (wishlist[i].item === item) {
+      check = true;
+    }
+  }
+  if (check === true) {
+    vex.dialog.alert("This item is already in your wishlist: " + item.title);
+  }
+  if (check === false) {
+    vex.dialog.alert("Added to wishlist: " + item.title);
+    wishlist.push({item: item});
+  }
+}
 //Event listener for add to cart button on the product page
 document.getElementById('cart-box-btn').addEventListener("click", function(event) {
   var item = Number(document.getElementsByClassName('product-page')[0].getAttribute('data-item'));
@@ -327,6 +410,17 @@ document.getElementById('cart-box-btn').addEventListener("click", function(event
   }
   else {
     addToCart(foundItems[item], Number(document.getElementsByClassName('qty')[0].value));
+  }
+})
+//Event listener for add to wishlist button on the product page
+document.getElementById('wish-box-btn').addEventListener("click", function(event) {
+  var item = Number(document.getElementsByClassName('product-page')[0].getAttribute('data-item'));
+  if (!item) {
+    item = Number(document.getElementsByClassName('product-page')[0].getAttribute('data-id'));
+    addWish(items[item]);
+  }
+  else {
+    addWish(foundItems[item]);
   }
 })
 //Event listener and creation of the shopping cart page
@@ -888,8 +982,72 @@ document.getElementsByClassName("user-menu")[0].addEventListener("click", functi
         infoDiv.appendChild(qty);
       }
     }
+    showElements('main-bar','past-orders');
   }
-  showElements('main-bar','past-orders');
+});
+//Event listener for showing wishlist
+document.getElementsByClassName("user-menu")[0].addEventListener("click", function(event) {
+  if (event.target.textContent === "Wishlist") {
+    while (document.getElementById('wish-list').lastChild) {
+      document.getElementById('wish-list').lastChild.remove();
+    }
+    var list = document.getElementById('wish-list');
+    for (var i = 0; i < wishlist.length; i++) {
+      var sum = 0;
+      for (var j = 0; j < wishlist[i].item.reviews.length; j++) {
+        sum += wishlist[i].item.reviews[j].stars;
+      }
+      var panel = createElementWithClass('div','panel panel-default');
+      var heading = createElementWithClass('div','panel-heading');
+      var title = document.createElement('span');
+      var body = createElementWithClass('div','panel-body');
+
+      title.textContent = wishlist[i].item.title;
+
+      list.appendChild(panel);
+      panel.appendChild(heading);
+      heading.appendChild(title);
+      panel.appendChild(body);
+
+      var rating = sum / wishlist[i].item.reviews.length;
+      var row = createElementWithClass('div','row wish');
+      var imageDiv = createElementWithClass('div','col-md-3');
+      var image = createElementWithClass('img','img-responsive');
+      var infoDiv = createElementWithClass('div','col-md-9');
+      var title = document.createElement('h4');
+      var stars = createElementWithClass('div','rating');
+      var price = createElementWithClass('h4','text-danger');
+      var cart = createElementWithClass('button','btn btn-success wl-cart-btn');
+      var cartIcon = createElementWithClass('i','fa fa-cart-plus fa-lg');
+      var cartText = document.createTextNode('  Add to Cart');
+      var remove = createElementWithClass('button','btn btn-info wl-remove-btn');
+      var removeIcon = createElementWithClass('i','fa fa-trash fa-lg');
+      var removeText = document.createTextNode('  Remove');
+      var spacing = document.createElement('p');
+
+      image.setAttribute('src', wishlist[i].item.image.cart);
+      title.textContent = wishlist[i].item.title;
+      price.textContent = "$" + wishlist[i].item.price.toFixed(2);
+
+      body.appendChild(row);
+      row.appendChild(imageDiv);
+      imageDiv.appendChild(image);
+      row.appendChild(infoDiv);
+      infoDiv.appendChild(title);
+      infoDiv.appendChild(stars);
+      stars.appendChild(createStars(rating));
+      stars.appendChild(document.createTextNode("  " + wishlist[i].item.reviews.length + " customer reviews."));
+      infoDiv.appendChild(price);
+      infoDiv.appendChild(cart);
+      infoDiv.appendChild(spacing);
+      infoDiv.appendChild(remove);
+      cart.appendChild(cartIcon);
+      cart.appendChild(cartText);
+      remove.appendChild(removeIcon);
+      remove.appendChild(removeText);
+    }
+    showElements('main-bar','wishlist');
+  }
 });
 //Event listener for main page button
 document.getElementById('home').addEventListener("click", function() {
@@ -922,6 +1080,10 @@ document.getElementById('checkout-back').addEventListener("click", function() {
 });
 
 document.getElementById('orders-back').addEventListener("click", function() {
+  showElements('main-bar','main-screen','search-panel','recommended');
+});
+
+document.getElementById('wish-back').addEventListener("click", function() {
   showElements('main-bar','main-screen','search-panel','recommended');
 });
 //Function that calculates recommended items for display
