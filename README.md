@@ -1,5 +1,10 @@
 # kart
 A shopping website where you can search and buy.
+* Search can be done by category or across all items.
+* Items can be added to cart or wishlist.
+* Each item has a product view with written reviews. New reviews can be added to the product.
+* Checkout process after items added to cart.
+* Past orders and wishlist can be viewed from the main menu.
 
 ## Built with:
 * JavaScript
