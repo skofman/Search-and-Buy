@@ -1,4 +1,4 @@
-# kart
+# kart -- http://kart.herokuapp.com/
 A shopping website where you can search and buy.
 * Search can be done by category or across all items.
 * Items can be added to cart or wishlist.
